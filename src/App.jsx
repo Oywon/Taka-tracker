@@ -1576,7 +1576,9 @@ export default function App() {
 
   const apiFetch = async (path, options = {}, customToken = null) => {
     const authToken = customToken || token
-    const response = await fetch(path, {
+    const apiBase = import.meta.env.VITE_API_URL || ''
+    const url = apiBase ? `${apiBase}${path}` : path
+    const response = await fetch(url, {
       headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}), ...(options.headers || {}) },
       ...options,
     })
