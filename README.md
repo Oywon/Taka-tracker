@@ -61,6 +61,35 @@ On Windows PowerShell, copy the example file with:
 Copy-Item .env.example .env.local
 ```
 
+## Deploy
+
+The Vercel site hosts the frontend. The Express API and SQLite database must
+run separately; Vercel's serverless filesystem is not persistent enough for
+the ledger database.
+
+### Deploy the API on Render
+
+1. In Render, create a **Blueprint** from this GitHub repository.
+2. Render reads `render.yaml` and creates the API service with a persistent
+   disk. Keep the generated `JWT_SECRET` private.
+3. Wait for the API service to finish deploying. Its address will look like
+   `https://taka-tracker-api.onrender.com`.
+4. Check that `https://<your-api-host>/api/health` returns `{"status":"ok"}`.
+
+The persistent disk is required so user accounts and ledger entries survive
+service restarts and deployments.
+
+### Connect the Vercel frontend
+
+1. In the Vercel project, open **Settings → Environment Variables**.
+2. Add `VITE_API_URL` with the Render API's base URL, for example
+   `https://taka-tracker-api.onrender.com` (do not add `/api` at the end).
+3. Apply it to the Production environment and redeploy the frontend.
+
+The Render Blueprint allows requests from the current Vercel site and local
+development. If the frontend domain changes, update `CORS_ORIGIN` on Render
+to the new origin and redeploy the API.
+
 ## Available scripts
 
 | Command | Description |
@@ -79,6 +108,7 @@ Copy-Item .env.example .env.local
 | `PORT` | API | API port. Defaults to `4000`. |
 | `DB_PATH` | API | SQLite database path. Defaults to `server/data.db`. |
 | `JWT_SECRET` | API | Secret used to sign session tokens. Set a strong, private value outside local development. |
+| `CORS_ORIGIN` | API | Comma-separated list of allowed browser origins. Defaults to local Vite development URLs. |
 | `SEED_DEMO_DATA` | API | Set to `true` to seed demo ledger data. |
 
 Keep secrets in your local environment or deployment provider; do not commit them to GitHub. The local SQLite database is ignored by Git.

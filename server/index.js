@@ -12,7 +12,13 @@ const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db')
 const JWT_SECRET = process.env.JWT_SECRET || 'takaTrackSecretKey'
 
 const app = express()
-app.use(cors())
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean)
+app.use(cors({
+  origin: (origin, callback) => callback(null, !origin || allowedOrigins.includes(origin)),
+}))
 app.use(express.json())
 
 const sqlite = sqlite3.verbose()
@@ -181,6 +187,10 @@ const authenticate = (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' })
   }
 }
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' })
+})
 
 app.post('/api/register', async (req, res) => {
   const { email, name, password } = req.body

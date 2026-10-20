@@ -1708,7 +1708,7 @@ export default function App() {
 
   const apiFetch = async (path, options = {}, customToken = null) => {
     const authToken = customToken || token
-    const apiBase = import.meta.env.VITE_API_URL || ''
+    const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
     const url = apiBase ? `${apiBase}${path}` : path
     const response = await fetch(url, {
       headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}), ...(options.headers || {}) },
@@ -1716,6 +1716,9 @@ export default function App() {
     })
     if (!response.ok) {
       const body = await response.json().catch(() => null)
+      if (response.status === 404 && path.startsWith('/api') && !apiBase) {
+        throw new Error('The API is not deployed on this site. Set VITE_API_URL in Vercel to your backend URL, then redeploy.')
+      }
       throw new Error(body?.error || body?.message || response.statusText || 'Server error')
     }
     if (response.status === 204) return null
