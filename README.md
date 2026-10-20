@@ -1,16 +1,31 @@
-# React + Vite
+# Taka Khata
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal finance ledger for tracking income, expenses, budgets, and savings.
 
-Currently, two official plugins are available:
+## Run locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm install
+npm run dev
+```
 
-## React Compiler
+The development command starts the Vite client and the Express API. The API
+stores accounts and ledger data in `server/data.db` using SQLite. To use a
+different database file, set `DB_PATH` before starting the server.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Sign-in and data
 
-## Expanding the ESLint configuration
+Continue with your name and mobile number. The first use of a mobile number
+creates an account and an empty ledger; the balance remains blank until the
+first transaction is saved. Transactions, budgets, and savings goals are
+stored in SQLite and remain associated with the account.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Name and mobile number alone do not verify identity. Add a verified SMS
+one-time code or another authentication factor before using this login flow
+for real financial data or deploying it publicly.
+
+## Build
+
+```sh
+npm run build
+```

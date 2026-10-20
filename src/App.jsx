@@ -4,7 +4,7 @@ import {
   Plus, Trash2, Edit2, TrendingUp, TrendingDown, Wallet,
   PiggyBank, Target, BarChart2, ArrowUpRight, ArrowDownRight,
   Calendar, Tag, AlignLeft, CheckCircle2, Circle, AlertTriangle,
-  ChevronRight, ChevronDown, X, Save, Home, Settings,
+  ChevronRight, ChevronDown, X, Save, Home, Settings, Sparkles,
   DollarSign, ShoppingCart, Car, Coffee, Utensils, Zap,
   Heart, BookOpen, Music, Plane, Smartphone, MoreHorizontal,
   RefreshCw, Eye, EyeOff, Moon, Sun, Filter, Bell, Search,
@@ -58,95 +58,115 @@ const useTheme = () => useContext(ThemeContext)
 /* ─── FONTS & GLOBAL STYLES ────────────────────────────────── */
 const FontLoader = ({ theme }) => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Tiro+Bangla:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap');
 
     :root {
-      /* DARK THEME (default) */
-      --bg:           #070912;
-      --surface:      #11151f;
-      --surface2:     #171d2b;
-      --surface3:     #212a3a;
-      --border:       rgba(255,255,255,0.08);
-      --border2:      rgba(255,255,255,0.14);
-      --text:         #eef2ff;
-      --text2:        #c1c9dc;
-      --text3:        #7f8ba8;
-      --green:        #34d399;
-      --green-bg:     rgba(52,211,153,0.14);
-      --red:          #fb7185;
-      --red-bg:       rgba(251,113,133,0.14);
-      --amber:        #fbbf24;
-      --amber-bg:     rgba(251,191,36,0.14);
-      --blue:         #60a5fa;
-      --blue-bg:      rgba(96,165,250,0.14);
-      --purple:       #a78bfa;
-      --purple-bg:    rgba(167,139,250,0.14);
-      --accent:       #34d399;
-      --radius:       14px;
-      --radius-sm:    10px;
-      --shadow:       0 4px 24px rgba(0,0,0,0.4);
-      --shadow-lg:    0 24px 80px rgba(0,0,0,0.5);
+      --paper: #FCF1D0;
+      --paper-deep: #e9dfbd;
+      --ink: #010736;
+      --ink-soft: #0D1C42;
+      --red: #0D1C42;
+      --red-soft: rgba(13, 28, 66, 0.12);
+      --gold: #22396F;
+      --gold-soft: rgba(34, 57, 111, 0.12);
+      --olive: #22396F;
+      --olive-soft: rgba(34, 57, 111, 0.12);
+      --line: rgba(1, 7, 54, 0.14);
+      --shadow: rgba(1, 7, 54, 0.12);
+      --bg: #FCF1D0;
+      --surface: #fff9e8;
+      --surface2: #FCF1D0;
+      --surface3: #e9dfbd;
+      --border: rgba(1, 7, 54, 0.14);
+      --border2: rgba(1, 7, 54, 0.24);
+      --text: #010736;
+      --text2: #0D1C42;
+      --text3: #22396F;
+      --green: #22396F;
+      --green-bg: rgba(34, 57, 111, 0.12);
+      --red-bg: rgba(13, 28, 66, 0.10);
+      --amber: #22396F;
+      --amber-bg: rgba(34, 57, 111, 0.12);
+      --blue: #0D1C42;
+      --blue-bg: rgba(13, 28, 66, 0.10);
+      --purple: #22396F;
+      --purple-bg: rgba(34, 57, 111, 0.12);
+      --accent: #22396F;
+      --on-accent: #FCF1D0;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow-lg: 0 18px 48px rgba(1, 7, 54, 0.12);
     }
 
-    [data-theme="light"] {
-      --bg:           #f4f6fb;
-      --surface:      #ffffff;
-      --surface2:     #f0f3fa;
-      --surface3:     #e4e9f5;
-      --border:       rgba(0,0,0,0.08);
-      --border2:      rgba(0,0,0,0.14);
-      --text:         #0f1629;
-      --text2:        #3a4565;
-      --text3:        #7f8ba8;
-      --green:        #059669;
-      --green-bg:     rgba(5,150,105,0.10);
-      --red:          #e11d48;
-      --red-bg:       rgba(225,29,72,0.10);
-      --amber:        #d97706;
-      --amber-bg:     rgba(217,119,6,0.10);
-      --blue:         #2563eb;
-      --blue-bg:      rgba(37,99,235,0.10);
-      --purple:       #7c3aed;
-      --purple-bg:    rgba(124,58,237,0.10);
-      --accent:       #059669;
-      --shadow:       0 4px 24px rgba(0,0,0,0.08);
-      --shadow-lg:    0 24px 80px rgba(0,0,0,0.12);
+    [data-theme="dark"] {
+      --paper: #010736;
+      --paper-deep: #0D1C42;
+      --ink: #FCF1D0;
+      --ink-soft: #FCF1D0;
+      --red: #FCF1D0;
+      --red-soft: rgba(252, 241, 208, 0.12);
+      --gold: #FCF1D0;
+      --gold-soft: rgba(252, 241, 208, 0.12);
+      --olive: #FCF1D0;
+      --olive-soft: rgba(252, 241, 208, 0.12);
+      --line: rgba(252, 241, 208, 0.12);
+      --shadow: rgba(1, 7, 54, 0.32);
+      --bg: #010736;
+      --surface: #0D1C42;
+      --surface2: #22396F;
+      --surface3: #2d467c;
+      --border: rgba(252, 241, 208, 0.12);
+      --border2: rgba(252, 241, 208, 0.22);
+      --text: #FCF1D0;
+      --text2: #FCF1D0;
+      --text3: #d4d7e4;
+      --green: #FCF1D0;
+      --green-bg: rgba(252, 241, 208, 0.12);
+      --red-bg: rgba(252, 241, 208, 0.10);
+      --amber: #FCF1D0;
+      --amber-bg: rgba(252, 241, 208, 0.12);
+      --blue: #FCF1D0;
+      --blue-bg: rgba(252, 241, 208, 0.10);
+      --purple: #FCF1D0;
+      --purple-bg: rgba(252, 241, 208, 0.12);
+      --accent: #22396F;
+      --on-accent: #FCF1D0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
+      font-family: 'Work Sans', sans-serif;
+      background: linear-gradient(180deg, var(--paper) 0%, var(--bg) 100%);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       transition: background 0.3s ease, color 0.3s ease;
     }
 
     .page-shell {
-      background: var(--bg);
+      background:
+        linear-gradient(180deg, rgba(34,57,111,0.08), rgba(34,57,111,0.02) 18%, transparent 35%),
+        linear-gradient(180deg, var(--paper) 0%, var(--bg) 100%);
       min-height: 100vh;
       transition: background 0.3s ease;
+      position: relative;
     }
 
     [data-theme="dark"] .page-shell {
-      background: radial-gradient(circle at 15% 10%, rgba(52,211,153,0.10), transparent 28%),
-                  radial-gradient(circle at 90% 15%, rgba(96,165,250,0.08), transparent 20%),
-                  radial-gradient(circle at 50% 110%, rgba(251,191,36,0.06), transparent 12%),
-                  #070912;
-    }
-
-    [data-theme="light"] .page-shell {
-      background: radial-gradient(circle at 10% 0%, rgba(5,150,105,0.06), transparent 30%),
-                  radial-gradient(circle at 90% 10%, rgba(37,99,235,0.05), transparent 25%),
-                  #f4f6fb;
+      background:
+        linear-gradient(180deg, rgba(34,57,111,0.3), rgba(13,28,66,0.12) 28%, transparent 55%),
+        linear-gradient(180deg, #010736 0%, #0D1C42 100%);
     }
 
     .app-sidebar {
-      background: var(--surface);
+      background: linear-gradient(180deg, rgba(255,249,232,0.98), rgba(252,241,208,0.96));
       border-right: 1px solid var(--border);
-      box-shadow: var(--shadow);
+      box-shadow: 2px 0 0 rgba(52,36,20,0.02), 0 0 0 1px rgba(90,63,39,0.02);
       transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    [data-theme="dark"] .app-sidebar {
+      background: linear-gradient(180deg, rgba(13,28,66,0.98), rgba(1,7,54,0.96));
     }
 
     [data-theme="light"] .app-sidebar {
@@ -159,11 +179,11 @@ const FontLoader = ({ theme }) => (
     }
 
     [data-theme="dark"] .hero-card {
-      background: linear-gradient(180deg, rgba(52,211,153,0.10), rgba(17,21,31,0.95));
+      background: linear-gradient(180deg, rgba(34,57,111,0.62), rgba(13,28,66,0.95));
     }
 
     [data-theme="light"] .hero-card {
-      background: linear-gradient(135deg, rgba(5,150,105,0.06) 0%, var(--surface) 100%);
+      background: linear-gradient(135deg, rgba(34,57,111,0.08) 0%, var(--surface) 100%);
     }
 
     .section-heading {
@@ -199,8 +219,8 @@ const FontLoader = ({ theme }) => (
       main { min-height: calc(100vh - 140px); }
     }
 
-    .font-display { font-family: 'DM Serif Display', Georgia, serif; }
-    .font-mono    { font-family: 'JetBrains Mono', monospace; }
+    .font-display { font-family: 'Fraunces', Georgia, serif; }
+    .font-mono    { font-family: 'IBM Plex Mono', monospace; }
 
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -257,7 +277,7 @@ const FontLoader = ({ theme }) => (
       font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
       cursor: pointer; border: none; transition: all 0.15s;
     }
-    .btn-primary { background: var(--green); color: #0e0f14; }
+    .btn-primary { background: var(--green); color: var(--bg); }
     .btn-primary:hover { opacity: 0.88; }
     .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
     .btn-secondary:hover { background: var(--surface3); }
@@ -341,8 +361,8 @@ const FontLoader = ({ theme }) => (
       backdrop-filter: blur(10px);
       transition: background 0.3s ease;
     }
-    [data-theme="light"] .topbar { background: rgba(255,255,255,0.85); }
-    [data-theme="dark"] .topbar { background: rgba(17,21,31,0.85); }
+    [data-theme="light"] .topbar { background: rgba(255,249,232,0.92); }
+    [data-theme="dark"] .topbar { background: rgba(13,28,66,0.92); }
 
     .card-custom {
       background: var(--surface); border: 1px solid var(--border);
@@ -353,8 +373,19 @@ const FontLoader = ({ theme }) => (
 )
 
 /* ─── HELPERS ───────────────────────────────────────────────── */
-const fmt = n => '৳' + Number(n).toLocaleString('en-BD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-const today = () => new Date().toISOString().slice(0, 10)
+const fmt = n => n == null ? '—' : '৳' + Number(n).toLocaleString('en-BD', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+const localDate = (date = new Date()) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+const today = () => localDate()
+const yesterday = () => {
+  const date = new Date()
+  date.setDate(date.getDate() - 1)
+  return localDate(date)
+}
 
 const CAT_ICONS = {
   Food:        <Utensils size={14} />,
@@ -407,18 +438,19 @@ const DEFAULT_SAVINGS = [
 
 /* ─── LOGO ──────────────────────────────────────────────────── */
 const AppLogo = () => (
-  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
     <div style={{
-      width: 36, height: 36, borderRadius: 10,
-      background: 'linear-gradient(135deg, #22d3a0 0%, #6c8ef8 100%)',
+      width: 38, height: 38, borderRadius: 12,
+      background: 'linear-gradient(135deg, #010736 0%, #22396F 100%)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      boxShadow: '0 4px 14px rgba(34,211,160,0.3)'
+      boxShadow: '0 10px 20px rgba(1,7,54,0.18)',
+      border: '1px solid rgba(252,241,208,0.15)'
     }}>
-      <Wallet size={18} color="#0e0f14" strokeWidth={2.5} />
+      <Wallet size={18} color="#FCF1D0" strokeWidth={2.2} />
     </div>
     <div>
-      <div className="font-display" style={{ fontSize: 17, color: 'var(--text)', lineHeight: 1.1 }}>TakaTrack</div>
-      <div style={{ fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text3)', fontWeight: 600 }}>Finance Center</div>
+      <div className="font-display" style={{ fontSize: 18, color: 'var(--text)', lineHeight: 1.1, letterSpacing: '-0.03em' }}>Taka Khata</div>
+      <div style={{ fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text3)', fontWeight: 700 }}>Ledger & Planner</div>
     </div>
   </div>
 )
@@ -434,19 +466,16 @@ const ThemeToggle = () => {
 }
 
 /* ─── AUTH PAGE ─────────────────────────────────────────────── */
-const AuthPage = ({ onLogin, onRegister, error }) => {
-  const [mode, setMode]       = useState('login')
-  const [name, setName]       = useState('')
-  const [email, setEmail]     = useState('')
-  const [password, setPassword] = useState('')
-  const [busy, setBusy]       = useState(false)
-  const { theme }             = useTheme()
+const AuthPage = ({ onContinue, error }) => {
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [busy, setBusy] = useState(false)
+  const { theme } = useTheme()
 
   const submit = async () => {
     setBusy(true)
     try {
-      if (mode === 'login') await onLogin(email, password)
-      else await onRegister(name, email, password)
+      await onContinue(name, phone)
     } finally { setBusy(false) }
   }
 
@@ -454,43 +483,20 @@ const AuthPage = ({ onLogin, onRegister, error }) => {
     <div className="page-shell" data-theme={theme} style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', padding: 24 }}>
       <FontLoader theme={theme} />
       <div style={{ maxWidth: 460, width: '100%' }}>
-        {/* Logo */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
           <AppLogo />
         </div>
 
-        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, overflow: 'hidden' }}>
+        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
           <CardHeader style={{ borderBottom: '1px solid var(--border)', paddingBottom: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <CardTitle className="font-display" style={{ fontSize: 22, color: 'var(--text)' }}>
-                  {mode === 'login' ? 'Welcome back' : 'Create account'}
-                </CardTitle>
+                <CardTitle className="font-display" style={{ fontSize: 24, color: 'var(--text)' }}>Welcome to Taka Khata</CardTitle>
                 <CardDescription style={{ color: 'var(--text3)', marginTop: 4 }}>
-                  {mode === 'login' ? 'Sign in to your finance dashboard' : 'Start tracking your finances today'}
+                  Sign in or create your ledger with your name and mobile number.
                 </CardDescription>
               </div>
               <ThemeToggle />
-            </div>
-            {/* Mode tabs using shadcn Badge */}
-            <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-              {['login', 'register'].map(m => (
-                <Badge
-                  key={m}
-                  onClick={() => setMode(m)}
-                  variant={mode === m ? 'default' : 'outline'}
-                  style={{
-                    cursor: 'pointer',
-                    background: mode === m ? 'var(--green)' : 'transparent',
-                    color: mode === m ? '#0e0f14' : 'var(--text3)',
-                    border: mode === m ? 'none' : '1px solid var(--border)',
-                    padding: '5px 14px', borderRadius: 20, fontWeight: 600,
-                    fontSize: 12, textTransform: 'capitalize'
-                  }}
-                >
-                  {m === 'login' ? 'Sign In' : 'Register'}
-                </Badge>
-              ))}
             </div>
           </CardHeader>
 
@@ -502,34 +508,24 @@ const AuthPage = ({ onLogin, onRegister, error }) => {
             )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {mode === 'register' && (
-                <div>
-                  <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Full Name</Label>
-                  <Input
-                    placeholder="Jane Doe"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }}
-                  />
-                </div>
-              )}
               <div>
-                <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Email Address</Label>
+                <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Full Name</Label>
                 <Input
-                  type="email"
-                  placeholder="hello@example.com"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
+                  autoComplete="name"
+                  placeholder="Ayesha Rahman"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
                   style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }}
                 />
               </div>
               <div>
-                <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Password</Label>
+                <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Phone Number</Label>
                 <Input
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder="+880 17XXXXXXXX"
+                  value={phone}
+                  onChange={e => setPhone(e.target.value)}
                   style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }}
                 />
               </div>
@@ -539,25 +535,15 @@ const AuthPage = ({ onLogin, onRegister, error }) => {
           <CardFooter style={{ padding: '0 24px 24px', flexDirection: 'column', gap: 12, alignItems: 'stretch' }}>
             <Button
               onClick={submit}
-              disabled={busy || !email || !password || (mode === 'register' && !name)}
+              disabled={busy || !name.trim() || !phone.trim()}
               style={{
-                width: '100%', background: 'var(--green)', color: '#0e0f14',
-                fontWeight: 700, borderRadius: 10, height: 44, fontSize: 14,
+                width: '100%', background: 'linear-gradient(135deg, #22396F 0%, #0D1C42 100%)', color: '#FCF1D0',
+                fontWeight: 700, borderRadius: 12, height: 46, fontSize: 14,
                 border: 'none', cursor: busy ? 'not-allowed' : 'pointer', opacity: busy ? 0.7 : 1
               }}
             >
-              {busy ? 'Please wait…' : mode === 'login' ? 'Sign In' : 'Create Account'}
+              {busy ? 'Please wait…' : 'Continue to my ledger'}
             </Button>
-            <Separator style={{ background: 'var(--border)' }} />
-            <div style={{ fontSize: 13, color: 'var(--text3)', textAlign: 'center' }}>
-              {mode === 'login'
-                ? <>New to TakaTrack?{' '}
-                    <button style={{ background: 'none', border: 'none', color: 'var(--green)', fontWeight: 600, cursor: 'pointer', fontSize: 13 }} onClick={() => setMode('register')}>Create account</button>
-                  </>
-                : <>Already have an account?{' '}
-                    <button style={{ background: 'none', border: 'none', color: 'var(--green)', fontWeight: 600, cursor: 'pointer', fontSize: 13 }} onClick={() => setMode('login')}>Sign in</button>
-                  </>}
-            </div>
           </CardFooter>
         </Card>
       </div>
@@ -576,7 +562,7 @@ const Topbar = ({ user, onLogout, onAdd, balance }) => {
       {/* Balance pill */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 6,
-        background: 'var(--green-bg)', border: '1px solid rgba(52,211,153,0.2)',
+        background: 'var(--green-bg)', border: '1px solid var(--border)',
         borderRadius: 20, padding: '5px 14px'
       }}>
         <Wallet size={12} style={{ color: 'var(--green)' }} />
@@ -587,7 +573,7 @@ const Topbar = ({ user, onLogout, onAdd, balance }) => {
       <Button
         onClick={onAdd}
         style={{
-          background: 'var(--green)', color: '#0e0f14',
+          background: 'var(--green)', color: 'var(--bg)',
           fontWeight: 700, borderRadius: 10, height: 36,
           fontSize: 13, border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', gap: 6, padding: '0 14px'
@@ -605,8 +591,8 @@ const Topbar = ({ user, onLogout, onAdd, balance }) => {
           <DropdownMenuTrigger asChild>
             <button style={{
               width: 36, height: 36, borderRadius: 10,
-              background: 'linear-gradient(135deg, #22d3a0, #6c8ef8)',
-              border: 'none', cursor: 'pointer', color: '#0e0f14',
+              background: 'linear-gradient(135deg, #0D1C42, #22396F)',
+              border: 'none', cursor: 'pointer', color: '#FCF1D0',
               fontWeight: 700, fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}>
               {user.name?.charAt(0).toUpperCase() || 'U'}
@@ -617,7 +603,7 @@ const Topbar = ({ user, onLogout, onAdd, balance }) => {
             <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
             <div style={{ padding: '8px 12px' }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{user.name}</div>
-              <div style={{ fontSize: 11, color: 'var(--text3)' }}>{user.email}</div>
+              <div style={{ fontSize: 11, color: 'var(--text3)' }}>{user.phone || 'Personal ledger'}</div>
             </div>
             <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
             <DropdownMenuItem
@@ -649,7 +635,9 @@ const Sidebar = ({ balance, user, onLogout }) => {
     { to: '/',             label: 'Dashboard',     icon: <Home size={16} /> },
     { to: '/transactions', label: 'Transactions',  icon: <AlignLeft size={16} /> },
     { to: '/budget',       label: 'Budget',        icon: <Target size={16} /> },
-    { to: '/savings',      label: 'Savings Goals', icon: <PiggyBank size={16} /> },
+    { to: '/savings',      label: 'Savings',       icon: <PiggyBank size={16} /> },
+    { to: '/planner',      label: 'AI Planner',    icon: <Sparkles size={16} /> },
+    { to: '/split',        label: 'Split Bills',   icon: <Layers size={16} /> },
     { to: '/reports',      label: 'Reports',       icon: <BarChart2 size={16} /> },
   ]
 
@@ -671,16 +659,16 @@ const Sidebar = ({ balance, user, onLogout }) => {
       }}>
         <CardContent style={{ padding: '14px 16px' }}>
           <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text3)', marginBottom: 6 }}>Net Balance</div>
-          <div className="font-mono" style={{ fontSize: 20, fontWeight: 700, color: balance >= 0 ? 'var(--green)' : 'var(--red)' }}>
+          <div className="font-mono" style={{ fontSize: 20, fontWeight: 700, color: balance == null ? 'var(--text3)' : balance >= 0 ? 'var(--green)' : 'var(--red)' }}>
             {fmt(balance)}
           </div>
           <div style={{ marginTop: 8 }}>
             <Badge style={{
-              background: balance >= 0 ? 'var(--green-bg)' : 'var(--red-bg)',
-              color: balance >= 0 ? 'var(--green)' : 'var(--red)',
+              background: balance == null ? 'var(--surface3)' : balance >= 0 ? 'var(--green-bg)' : 'var(--red-bg)',
+              color: balance == null ? 'var(--text3)' : balance >= 0 ? 'var(--green)' : 'var(--red)',
               border: 'none', fontSize: 10, fontWeight: 700
             }}>
-              {balance >= 0 ? '↑ Net positive' : '↓ Overspent'}
+              {balance == null ? 'Waiting for first entry' : balance >= 0 ? '↑ Net positive' : '↓ Overspent'}
             </Badge>
           </div>
         </CardContent>
@@ -711,17 +699,20 @@ const Sidebar = ({ balance, user, onLogout }) => {
 }
 
 /* ─── ADD TRANSACTION SHEET ─────────────────────────────────── */
-const AddTxSheet = ({ open, onClose, onAdd }) => {
+const AddTxSheet = ({ open, onClose, onAdd, error }) => {
   const [type, setType]     = useState('expense')
   const [amount, setAmount] = useState('')
   const [cat, setCat]       = useState('')
   const [note, setNote]     = useState('')
   const [date, setDate]     = useState(today())
   const cats = type === 'expense' ? EXPENSE_CATS : INCOME_CATS
+  const numericAmount = Number(amount)
+  const canSubmit = Number.isFinite(numericAmount) && numericAmount > 0 && Boolean(cat) && Boolean(date)
 
-  const submit = () => {
-    if (!amount || !cat) return
-    onAdd({ id: Date.now(), type, amount: parseFloat(amount), cat, note, date })
+  const submit = async () => {
+    if (!canSubmit) return
+    const created = await onAdd({ type, amount: numericAmount, cat, note: note.trim(), date })
+    if (!created) return
     setAmount(''); setCat(''); setNote(''); setDate(today())
     onClose()
   }
@@ -733,6 +724,7 @@ const AddTxSheet = ({ open, onClose, onAdd }) => {
           <SheetTitle style={{ color: 'var(--text)', fontSize: 20 }} className="font-display">Add Transaction</SheetTitle>
           <SheetDescription style={{ color: 'var(--text3)' }}>Record a new income or expense entry</SheetDescription>
         </SheetHeader>
+        {error && <div role="alert" style={{ color: 'var(--red)', background: 'var(--red-bg)', borderRadius: 10, padding: '10px 12px', marginBottom: 16, fontSize: 13 }}>{error}</div>}
 
         {/* Type toggle */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 24, background: 'var(--surface2)', padding: 4, borderRadius: 12 }}>
@@ -741,7 +733,7 @@ const AddTxSheet = ({ open, onClose, onAdd }) => {
               flex: 1, padding: '10px', borderRadius: 9, border: 'none', cursor: 'pointer',
               fontFamily: 'DM Sans, sans-serif', fontSize: 13, fontWeight: 700,
               background: type === t ? (t === 'expense' ? 'var(--red)' : 'var(--green)') : 'transparent',
-              color: type === t ? '#0e0f14' : 'var(--text3)', transition: 'all 0.2s'
+              color: type === t ? 'var(--bg)' : 'var(--text3)', transition: 'all 0.2s'
             }}>
               {t === 'expense' ? '− Expense' : '+ Income'}
             </button>
@@ -752,7 +744,7 @@ const AddTxSheet = ({ open, onClose, onAdd }) => {
           <div>
             <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8, display: 'block' }}>Amount (৳)</Label>
             <Input
-              type="number" placeholder="0" value={amount}
+              type="number" min="0.01" step="0.01" inputMode="decimal" placeholder="e.g. 250" value={amount}
               onChange={e => setAmount(e.target.value)}
               style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10, fontSize: 22, fontWeight: 700, height: 54, fontFamily: 'JetBrains Mono, monospace' }}
             />
@@ -786,9 +778,29 @@ const AddTxSheet = ({ open, onClose, onAdd }) => {
           </div>
 
           <div>
-            <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8, display: 'block' }}>Date</Label>
+            <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8, display: 'block' }}>When did it happen?</Label>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+              {[{ label: 'Today', value: today() }, { label: 'Yesterday', value: yesterday() }].map(option => (
+                <button
+                  key={option.label}
+                  type="button"
+                  aria-pressed={date === option.value}
+                  onClick={() => setDate(option.value)}
+                  style={{
+                    padding: '7px 12px', borderRadius: 8,
+                    border: `1px solid ${date === option.value ? 'var(--accent)' : 'var(--border)'}`,
+                    background: date === option.value ? 'var(--accent)' : 'var(--surface2)',
+                    color: date === option.value ? 'var(--on-accent)' : 'var(--text2)',
+                    fontSize: 12, fontWeight: 600, cursor: 'pointer'
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
             <Input
-              type="date" value={date} onChange={e => setDate(e.target.value)}
+              type="date" required value={date} onChange={e => setDate(e.target.value)}
+              aria-label="Transaction date"
               style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10, height: 42 }}
             />
           </div>
@@ -797,12 +809,12 @@ const AddTxSheet = ({ open, onClose, onAdd }) => {
         <SheetFooter style={{ marginTop: 28, flexDirection: 'column', gap: 10 }}>
           <Button
             onClick={submit}
-            disabled={!amount || !cat}
+            disabled={!canSubmit}
             style={{
               width: '100%', background: type === 'expense' ? 'var(--red)' : 'var(--green)',
-              color: '#0e0f14', fontWeight: 700, borderRadius: 10, height: 46,
-              fontSize: 14, border: 'none', cursor: !amount || !cat ? 'not-allowed' : 'pointer',
-              opacity: !amount || !cat ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center'
+              color: 'var(--bg)', fontWeight: 700, borderRadius: 10, height: 46,
+              fontSize: 14, border: 'none', cursor: canSubmit ? 'pointer' : 'not-allowed',
+              opacity: !canSubmit ? 0.5 : 1, display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center'
             }}
           >
             <Save size={15} />
@@ -870,11 +882,12 @@ const DonutChart = ({ segments, size = 110 }) => {
 }
 
 /* ─── DASHBOARD ─────────────────────────────────────────────── */
-const Dashboard = ({ txs, onAdd }) => {
+const Dashboard = ({ txs, onAdd, user }) => {
+  const hasTransactions = txs.length > 0
   const totalIncome  = txs.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0)
   const totalExpense = txs.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0)
-  const balance      = totalIncome - totalExpense
-  const savingsRate  = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome * 100).toFixed(1) : 0
+  const balance      = hasTransactions ? totalIncome - totalExpense : null
+  const savingsRate  = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome * 100).toFixed(1) : null
 
   const weeks   = ['W1', 'W2', 'W3', 'W4']
   const weekData = weeks.map((label, i) => ({
@@ -898,13 +911,13 @@ const Dashboard = ({ txs, onAdd }) => {
       {/* Header */}
       <div className="section-heading fade-up" style={{ alignItems: 'flex-start' }}>
         <div>
-          <h1 className="font-display" style={{ fontSize: 28, color: 'var(--text)' }}>{greeting} 👋</h1>
+          <h1 className="font-display" style={{ fontSize: 28, color: 'var(--text)' }}>{greeting}, {user?.name?.trim().split(/\s+/)[0] || 'there'} 👋</h1>
           <p style={{ color: 'var(--text2)', marginTop: 4 }}>
-            {new Date().toLocaleDateString('en-BD', { weekday: 'long', month: 'long', day: 'numeric' })}
+            {new Date().toLocaleDateString('en-BD', { weekday: 'long', month: 'long', day: 'numeric' })} · I’m here to help you stay on top of your money.
           </p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <Button onClick={onAdd} style={{ background: 'var(--green)', color: '#0e0f14', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
+          <Button onClick={onAdd} style={{ background: 'var(--green)', color: 'var(--bg)', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
             <Plus size={14} /> Add Transaction
           </Button>
         </div>
@@ -918,15 +931,17 @@ const Dashboard = ({ txs, onAdd }) => {
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--text3)', marginBottom: 8 }}>Net Balance</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
                 <div className="font-mono" style={{ fontSize: 36, fontWeight: 700, color: 'var(--text)' }}>{fmt(balance)}</div>
-                <Badge style={{ background: 'var(--green-bg)', color: 'var(--green)', border: 'none', fontSize: 12, fontWeight: 700, padding: '6px 12px', borderRadius: 20 }}>
-                  {savingsRate}% saving rate
-                </Badge>
+                {hasTransactions && (
+                  <Badge style={{ background: 'var(--green-bg)', color: 'var(--green)', border: 'none', fontSize: 12, fontWeight: 700, padding: '6px 12px', borderRadius: 20 }}>
+                    {savingsRate}% saving rate
+                  </Badge>
+                )}
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: 'min(400px, 100%)' }}>
               {[
-                { label: 'Monthly Income',  value: fmt(totalIncome),  color: 'var(--green)' },
-                { label: 'Monthly Expense', value: fmt(totalExpense), color: 'var(--red)' }
+                { label: 'Income recorded',  value: fmt(hasTransactions ? totalIncome : null),  color: 'var(--green)' },
+                { label: 'Expenses recorded', value: fmt(hasTransactions ? totalExpense : null), color: 'var(--red)' }
               ].map(s => (
                 <div key={s.label} style={{ padding: '16px 18px', background: 'var(--surface2)', borderRadius: 14, border: '1px solid var(--border)' }}>
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text3)', marginBottom: 6 }}>{s.label}</div>
@@ -941,10 +956,10 @@ const Dashboard = ({ txs, onAdd }) => {
       {/* Stat cards */}
       <div className="card-grid" style={{ marginBottom: 20 }}>
         {[
-          { label: 'Total Balance',  value: fmt(balance),      sub: balance >= 0 ? '↑ Net positive' : '↓ Overspent',  color: balance >= 0 ? 'var(--green)' : 'var(--red)', icon: <Wallet size={18} />, badgeColor: balance >= 0 ? '#green' : 'red' },
-          { label: 'Income',         value: fmt(totalIncome),  sub: `${txs.filter(t=>t.type==='income').length} transactions`,  color: 'var(--green)', icon: <ArrowUpRight size={18} /> },
-          { label: 'Expenses',       value: fmt(totalExpense), sub: `${txs.filter(t=>t.type==='expense').length} transactions`, color: 'var(--red)',   icon: <ArrowDownRight size={18} /> },
-          { label: 'Savings Rate',   value: `${savingsRate}%`, sub: 'of income saved', color: 'var(--blue)', icon: <PiggyBank size={18} /> },
+          { label: 'Total Balance',  value: fmt(balance),      sub: hasTransactions ? balance >= 0 ? '↑ Net positive' : '↓ Overspent' : 'Awaiting first entry',  color: balance == null ? 'var(--text3)' : balance >= 0 ? 'var(--green)' : 'var(--red)', icon: <Wallet size={18} />, badgeColor: balance >= 0 ? '#green' : 'red' },
+          { label: 'Income',         value: fmt(hasTransactions ? totalIncome : null),  sub: `${txs.filter(t=>t.type==='income').length} transactions`,  color: 'var(--green)', icon: <ArrowUpRight size={18} /> },
+          { label: 'Expenses',       value: fmt(hasTransactions ? totalExpense : null), sub: `${txs.filter(t=>t.type==='expense').length} transactions`, color: 'var(--red)',   icon: <ArrowDownRight size={18} /> },
+          { label: 'Savings Rate',   value: savingsRate == null ? '—' : `${savingsRate}%`, sub: hasTransactions ? 'of income saved' : 'Available after entries', color: 'var(--blue)', icon: <PiggyBank size={18} /> },
         ].map((s, i) => (
           <Card key={s.label} className={`fade-up-${i}`} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, overflow: 'hidden' }}>
             <CardContent style={{ padding: '20px 22px', position: 'relative' }}>
@@ -959,8 +974,21 @@ const Dashboard = ({ txs, onAdd }) => {
         ))}
       </div>
 
+      {!hasTransactions && (
+        <Card className="fade-up-1" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18, marginBottom: 20, textAlign: 'center' }}>
+          <CardContent style={{ padding: '34px 24px' }}>
+            <BookOpen size={28} style={{ color: 'var(--gold)', margin: '0 auto 10px' }} />
+            <div className="font-display" style={{ color: 'var(--text)', fontSize: 20, marginBottom: 6 }}>Your ledger is ready</div>
+            <div style={{ color: 'var(--text3)', fontSize: 13, marginBottom: 18 }}>Your balance will appear after your first income or expense is recorded.</div>
+            <Button onClick={onAdd} style={{ background: 'linear-gradient(135deg, #22396F 0%, #0D1C42 100%)', color: '#FCF1D0', fontWeight: 700, borderRadius: 10, height: 40, fontSize: 13, border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 7, padding: '0 18px' }}>
+              <Plus size={14} /> Add your first transaction
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Charts row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
+      {hasTransactions && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
         <Card className="fade-up-1" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16 }}>
           <CardHeader style={{ padding: '20px 22px 0' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -1003,10 +1031,10 @@ const Dashboard = ({ txs, onAdd }) => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div>}
 
       {/* Recent transactions */}
-      <Card className="fade-up-3" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16 }}>
+      {hasTransactions && <Card className="fade-up-3" style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16 }}>
         <CardHeader style={{ padding: '20px 22px 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
@@ -1037,7 +1065,7 @@ const Dashboard = ({ txs, onAdd }) => {
             </div>
           ))}
         </CardContent>
-      </Card>
+      </Card>}
     </div>
   )
 }
@@ -1062,7 +1090,7 @@ const Transactions = ({ txs, onAdd, onDelete }) => {
           <h1 className="font-display" style={{ fontSize: 26, color: 'var(--text)', marginBottom: 4 }}>Transactions</h1>
           <p style={{ color: 'var(--text2)', fontSize: 13 }}>{txs.length} total entries</p>
         </div>
-        <Button onClick={onAdd} style={{ background: 'var(--green)', color: '#0e0f14', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
+        <Button onClick={onAdd} style={{ background: 'var(--green)', color: 'var(--bg)', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
           <Plus size={14} /> Add
         </Button>
       </div>
@@ -1093,7 +1121,7 @@ const Transactions = ({ txs, onAdd, onDelete }) => {
                   padding: '6px 14px', borderRadius: 7, border: 'none', cursor: 'pointer',
                   fontFamily: 'DM Sans, sans-serif', fontSize: 12, fontWeight: 700,
                   background: filter === f ? (f === 'expense' ? 'var(--red)' : f === 'income' ? 'var(--green)' : 'var(--surface3)') : 'transparent',
-                  color: filter === f ? (f === 'all' ? 'var(--text)' : '#0e0f14') : 'var(--text2)',
+                  color: filter === f ? (f === 'all' ? 'var(--text)' : 'var(--bg)') : 'var(--text2)',
                   transition: 'all 0.15s', textTransform: 'capitalize'
                 }}>{f}</button>
               ))}
@@ -1159,7 +1187,8 @@ const Budget = ({ txs, budgets, onAddBudget, onDeleteBudget }) => {
 
   const addBudget = async () => {
     if (!cat || !limit) return
-    await onAddBudget({ cat, limit: parseFloat(limit), period })
+    const created = await onAddBudget({ cat, limit: parseFloat(limit), period })
+    if (!created) return
     setCat(''); setLimit(''); setShowAdd(false)
   }
 
@@ -1170,13 +1199,13 @@ const Budget = ({ txs, budgets, onAddBudget, onDeleteBudget }) => {
           <h1 className="font-display" style={{ fontSize: 26, color: 'var(--text)', marginBottom: 4 }}>Budget Limits</h1>
           <p style={{ color: 'var(--text2)', fontSize: 13 }}>Set spending limits per category</p>
         </div>
-        <Button onClick={() => setShowAdd(!showAdd)} style={{ background: 'var(--green)', color: '#0e0f14', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
+        <Button onClick={() => setShowAdd(!showAdd)} style={{ background: 'var(--green)', color: 'var(--bg)', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
           <Plus size={14} /> New Budget
         </Button>
       </div>
 
       {showAdd && (
-        <Card className="scale-in" style={{ background: 'var(--surface)', border: '1px solid rgba(52,211,153,0.3)', borderRadius: 16, marginBottom: 20 }}>
+        <Card className="scale-in" style={{ background: 'var(--surface)', border: '1px solid var(--border2)', borderRadius: 16, marginBottom: 20 }}>
           <CardHeader style={{ padding: '20px 22px 0' }}>
             <CardTitle style={{ fontSize: 13, color: 'var(--green)', fontWeight: 700 }}>New Budget Rule</CardTitle>
           </CardHeader>
@@ -1209,7 +1238,7 @@ const Budget = ({ txs, budgets, onAddBudget, onDeleteBudget }) => {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={addBudget} style={{ background: 'var(--green)', color: '#0e0f14', border: 'none', cursor: 'pointer', height: 40, borderRadius: 10, fontWeight: 700, padding: '0 16px' }}>
+              <Button onClick={addBudget} style={{ background: 'var(--green)', color: 'var(--bg)', border: 'none', cursor: 'pointer', height: 40, borderRadius: 10, fontWeight: 700, padding: '0 16px' }}>
                 <Save size={14} />
               </Button>
             </div>
@@ -1293,7 +1322,8 @@ const Savings = ({ goals, onAddGoal, onDeleteGoal, onUpdateGoal }) => {
 
   const addGoal = async () => {
     if (!name || !target) return
-    await onAddGoal({ name, target: parseFloat(target), saved: parseFloat(saved || 0), color: colors[colIdx % colors.length], deadline })
+    const created = await onAddGoal({ name, target: parseFloat(target), saved: parseFloat(saved || 0), color: colors[colIdx % colors.length], deadline })
+    if (!created) return
     setName(''); setTarget(''); setSaved(''); setDeadline(''); setShowAdd(false)
   }
 
@@ -1304,13 +1334,13 @@ const Savings = ({ goals, onAddGoal, onDeleteGoal, onUpdateGoal }) => {
           <h1 className="font-display" style={{ fontSize: 26, color: 'var(--text)', marginBottom: 4 }}>Savings Goals</h1>
           <p style={{ color: 'var(--text2)', fontSize: 13 }}>Track progress towards each goal</p>
         </div>
-        <Button onClick={() => setShowAdd(!showAdd)} style={{ background: 'var(--green)', color: '#0e0f14', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
+        <Button onClick={() => setShowAdd(!showAdd)} style={{ background: 'var(--green)', color: 'var(--bg)', fontWeight: 700, borderRadius: 10, height: 38, fontSize: 13, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, padding: '0 16px' }}>
           <Plus size={14} /> New Goal
         </Button>
       </div>
 
       {showAdd && (
-        <Card className="scale-in" style={{ background: 'var(--surface)', border: '1px solid rgba(52,211,153,0.25)', borderRadius: 16, marginBottom: 20 }}>
+        <Card className="scale-in" style={{ background: 'var(--surface)', border: '1px solid var(--border2)', borderRadius: 16, marginBottom: 20 }}>
           <CardHeader style={{ padding: '20px 22px 0' }}>
             <CardTitle style={{ fontSize: 13, color: 'var(--green)', fontWeight: 700 }}>Create New Goal</CardTitle>
           </CardHeader>
@@ -1342,7 +1372,7 @@ const Savings = ({ goals, onAddGoal, onDeleteGoal, onUpdateGoal }) => {
               {colors.map((c, i) => (
                 <button key={c} onClick={() => setColIdx(i)} style={{ width: 22, height: 22, borderRadius: '50%', background: c, border: 'none', cursor: 'pointer', outline: colIdx === i ? `2.5px solid ${c}` : 'none', outlineOffset: 2, transition: 'all 0.15s' }} />
               ))}
-              <Button onClick={addGoal} style={{ marginLeft: 'auto', background: 'var(--green)', color: '#0e0f14', border: 'none', cursor: 'pointer', height: 36, borderRadius: 10, fontWeight: 700, padding: '0 16px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 7 }}>
+              <Button onClick={addGoal} style={{ marginLeft: 'auto', background: 'var(--green)', color: 'var(--bg)', border: 'none', cursor: 'pointer', height: 36, borderRadius: 10, fontWeight: 700, padding: '0 16px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 7 }}>
                 <Save size={13} /> Create Goal
               </Button>
             </div>
@@ -1418,6 +1448,107 @@ const Savings = ({ goals, onAddGoal, onDeleteGoal, onUpdateGoal }) => {
 }
 
 /* ─── REPORTS PAGE ──────────────────────────────────────────── */
+const Planner = ({ txs }) => {
+  if (txs.length === 0) {
+    return (
+      <div style={{ flex: 1, padding: '24px 28px', overflowY: 'auto' }}>
+        <div className="fade-up" style={{ marginBottom: 20 }}>
+          <h1 className="font-display" style={{ fontSize: 28, color: 'var(--text)', marginBottom: 6 }}>AI Planner</h1>
+          <p style={{ color: 'var(--text2)', fontSize: 13 }}>Your planner will use your ledger history to make useful recommendations.</p>
+        </div>
+        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18, textAlign: 'center' }}>
+          <CardContent style={{ padding: '52px 24px' }}>
+            <Sparkles size={30} style={{ color: 'var(--gold)', margin: '0 auto 12px' }} />
+            <div style={{ color: 'var(--text)', fontWeight: 700, marginBottom: 6 }}>Your plan starts with your first entry</div>
+            <div style={{ color: 'var(--text3)', fontSize: 13 }}>Add income or an expense to see insights based on your own data.</div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const monthlyIncome = txs.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)
+  const monthlySpend = txs.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)
+  const safeLimit = Math.max(monthlyIncome - monthlySpend, 0)
+  const suggestions = [
+    { title: 'Emergency buffer', amount: Math.min(20000, Math.max(5000, Math.round(safeLimit * 0.18))), tone: 'var(--green)' },
+    { title: 'Joy fund', amount: Math.min(15000, Math.max(3000, Math.round(safeLimit * 0.12))), tone: 'var(--amber)' },
+    { title: 'Bill cover', amount: Math.min(25000, Math.max(6000, Math.round(safeLimit * 0.22))), tone: 'var(--red)' },
+  ]
+
+  return (
+    <div style={{ flex: 1, padding: '24px 28px', overflowY: 'auto' }}>
+      <div className="fade-up" style={{ marginBottom: 20 }}>
+        <h1 className="font-display" style={{ fontSize: 28, color: 'var(--text)', marginBottom: 6 }}>AI Planner</h1>
+        <p style={{ color: 'var(--text2)', fontSize: 13 }}>Smart suggestions based on your recent cash flow and spending pattern.</p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16 }}>
+        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18 }}>
+          <CardHeader style={{ padding: '22px 22px 0' }}>
+            <CardTitle style={{ fontSize: 14, color: 'var(--text)', fontWeight: 700 }}>This month’s plan</CardTitle>
+          </CardHeader>
+          <CardContent style={{ padding: '18px 22px 22px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+              {suggestions.map(item => (
+                <div key={item.title} style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 14, padding: 16 }}>
+                  <div style={{ fontSize: 11, color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>{item.title}</div>
+                  <div className="font-mono" style={{ fontSize: 20, fontWeight: 700, color: item.tone }}>{fmt(item.amount)}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 18, background: 'var(--green-bg)', border: '1px solid rgba(45,106,83,0.15)', borderRadius: 14, padding: 16 }}>
+              <div style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--green)', fontWeight: 700, marginBottom: 8 }}>AI advice</div>
+              <div style={{ color: 'var(--text2)', fontSize: 14 }}>
+                With a monthly surplus of <span className="font-mono" style={{ color: 'var(--green)', fontWeight: 700 }}>{fmt(safeLimit)}</span>, you can keep a stronger emergency cushion and still set aside a dining and travel allowance without overspending.
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18 }}>
+          <CardHeader style={{ padding: '22px 22px 0' }}>
+            <CardTitle style={{ fontSize: 14, color: 'var(--text)', fontWeight: 700 }}>Forecast</CardTitle>
+          </CardHeader>
+          <CardContent style={{ padding: '18px 22px 22px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Income</div>
+                <div className="font-mono" style={{ fontSize: 22, fontWeight: 700, color: 'var(--green)' }}>{fmt(monthlyIncome)}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Spend</div>
+                <div className="font-mono" style={{ fontSize: 22, fontWeight: 700, color: 'var(--red)' }}>{fmt(monthlySpend)}</div>
+              </div>
+              <div className="progress-track" style={{ height: 10 }}>
+                <div className="progress-fill" style={{ width: `${Math.min((monthlySpend / Math.max(monthlyIncome, 1)) * 100, 100)}%`, background: 'linear-gradient(90deg, var(--red), var(--amber))' }} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+const SplitBills = () => {
+  return (
+    <div style={{ flex: 1, padding: '24px 28px', overflowY: 'auto' }}>
+      <div className="fade-up" style={{ marginBottom: 20 }}>
+        <h1 className="font-display" style={{ fontSize: 28, color: 'var(--text)', marginBottom: 6 }}>Split Bills</h1>
+        <p style={{ color: 'var(--text2)', fontSize: 13 }}>Coordinate shared expenses and settle balances quickly.</p>
+      </div>
+      <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 18, textAlign: 'center' }}>
+        <CardContent style={{ padding: '52px 24px' }}>
+          <Layers size={30} style={{ color: 'var(--gold)', margin: '0 auto 12px' }} />
+          <div style={{ color: 'var(--text)', fontWeight: 700, marginBottom: 6 }}>No shared bills yet</div>
+          <div style={{ color: 'var(--text3)', fontSize: 13 }}>Shared bill groups and settlements will appear here when added.</div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 const Reports = ({ txs }) => {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
   const now    = new Date()
@@ -1543,6 +1674,7 @@ export default function App() {
   const [showAdd, setShowAdd] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError]   = useState(null)
+  const [dataError, setDataError] = useState(null)
   const [authError, setAuthError] = useState(null)
   const [authChecked, setAuthChecked] = useState(false)
   const [token, setToken]   = useState(() => localStorage.getItem('takaTrack_token') || '')
@@ -1590,20 +1722,12 @@ export default function App() {
     return response.json()
   }
 
-  const handleLogin = async (email, password) => {
+  const handleLogin = async (name, phone) => {
     setAuthError(null)
     try {
-      const data = await apiFetch('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) })
+      const data = await apiFetch('/api/login', { method: 'POST', body: JSON.stringify({ name, phone }) })
       syncAuth(data.token, data.user); await loadData(data.token); return true
     } catch (err) { setAuthError(err.message || 'Login failed'); return false }
-  }
-
-  const handleRegister = async (name, email, password) => {
-    setAuthError(null)
-    try {
-      const data = await apiFetch('/api/register', { method: 'POST', body: JSON.stringify({ name, email, password }) })
-      syncAuth(data.token, data.user); await loadData(data.token); return true
-    } catch (err) { setAuthError(err.message || 'Registration failed'); return false }
   }
 
   const verifySession = async () => {
@@ -1639,42 +1763,83 @@ export default function App() {
   useEffect(() => { if (!authChecked) return; if (user && token) loadData() }, [authChecked, token, user])
 
   const addTx = async tx => {
-    try { const created = await apiFetch('/api/transactions', { method: 'POST', body: JSON.stringify(tx) }); setTxs(prev => [created, ...prev]) }
-    catch { /* fallback: add locally */ setTxs(prev => [tx, ...prev]) }
+    try {
+      const created = await apiFetch('/api/transactions', { method: 'POST', body: JSON.stringify(tx) })
+      setDataError(null)
+      setTxs(prev => [created, ...prev])
+      return created
+    } catch (err) {
+      setDataError(`Could not save transaction: ${err.message}`)
+      return null
+    }
   }
   const deleteTx = async id => {
-    try { await apiFetch(`/api/transactions/${id}`, { method: 'DELETE' }) } catch {}
+    try {
+      await apiFetch(`/api/transactions/${id}`, { method: 'DELETE' })
+      setDataError(null)
+    } catch (err) {
+      setDataError(`Could not delete transaction: ${err.message}`)
+      return
+    }
     setTxs(prev => prev.filter(t => t.id !== id))
   }
   const addBudget = async budget => {
-    try { const created = await apiFetch('/api/budgets', { method: 'POST', body: JSON.stringify(budget) }); setBudgets(prev => [created, ...prev]) }
-    catch { setBudgets(prev => [{ ...budget, id: Date.now() }, ...prev]) }
+    try {
+      const created = await apiFetch('/api/budgets', { method: 'POST', body: JSON.stringify(budget) })
+      setDataError(null)
+      setBudgets(prev => [created, ...prev])
+      return created
+    } catch (err) {
+      setDataError(`Could not save budget: ${err.message}`)
+      return null
+    }
   }
   const deleteBudget = async id => {
-    try { await apiFetch(`/api/budgets/${id}`, { method: 'DELETE' }) } catch {}
+    try {
+      await apiFetch(`/api/budgets/${id}`, { method: 'DELETE' })
+      setDataError(null)
+    } catch (err) {
+      setDataError(`Could not delete budget: ${err.message}`)
+      return
+    }
     setBudgets(prev => prev.filter(b => b.id !== id))
   }
   const addGoal = async goal => {
-    try { const created = await apiFetch('/api/goals', { method: 'POST', body: JSON.stringify(goal) }); setGoals(prev => [created, ...prev]) }
-    catch { setGoals(prev => [{ ...goal, id: Date.now() }, ...prev]) }
+    try {
+      const created = await apiFetch('/api/goals', { method: 'POST', body: JSON.stringify(goal) })
+      setDataError(null)
+      setGoals(prev => [created, ...prev])
+      return created
+    } catch (err) {
+      setDataError(`Could not save goal: ${err.message}`)
+      return null
+    }
   }
   const deleteGoal = async id => {
-    try { await apiFetch(`/api/goals/${id}`, { method: 'DELETE' }) } catch {}
+    try {
+      await apiFetch(`/api/goals/${id}`, { method: 'DELETE' })
+      setDataError(null)
+    } catch (err) {
+      setDataError(`Could not delete goal: ${err.message}`)
+      return
+    }
     setGoals(prev => prev.filter(g => g.id !== id))
   }
   const updateGoal = async (id, inc) => {
-    try { const updated = await apiFetch(`/api/goals/${id}`, { method: 'PUT', body: JSON.stringify({ inc }) }); setGoals(prev => prev.map(g => g.id === id ? updated : g)) }
-    catch { setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + inc } : g)) }
+    try {
+      const updated = await apiFetch(`/api/goals/${id}`, { method: 'PUT', body: JSON.stringify({ inc }) })
+      setDataError(null)
+      setGoals(prev => prev.map(g => g.id === id ? updated : g))
+      return updated
+    } catch (err) {
+      setDataError(`Could not update goal: ${err.message}`)
+      return null
+    }
   }
 
-  const balance = txs.reduce((s, t) => t.type === 'income' ? s + t.amount : s - t.amount, 0)
-
-  // For demo: seed default data if no API
-  useEffect(() => {
-    if (authChecked && user && txs.length === 0 && !loading) {
-      setTxs(DEFAULT_TXS); setBudgets(DEFAULT_BUDGETS); setGoals(DEFAULT_SAVINGS)
-    }
-  }, [authChecked, user, loading])
+  const balance = txs.length
+    ? txs.reduce((sum, transaction) => transaction.type === 'income' ? sum + transaction.amount : sum - transaction.amount, 0)
+    : null
 
   if (loading && !authChecked) {
     return (
@@ -1713,7 +1878,7 @@ export default function App() {
           <Routes>
             <Route
               path="/login"
-              element={user ? <Navigate to="/" replace /> : <AuthPage onLogin={handleLogin} onRegister={handleRegister} error={authError} />}
+              element={user ? <Navigate to="/" replace /> : <AuthPage onContinue={handleLogin} error={authError} />}
             />
             <Route
               path="/*"
@@ -1723,17 +1888,24 @@ export default function App() {
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                     <Topbar user={user} onLogout={logout} onAdd={() => setShowAdd(true)} balance={balance} />
                     <main style={{ flex: 1, overflowY: 'auto' }}>
+                      {dataError && (
+                        <div role="alert" style={{ margin: '16px 28px 0', borderRadius: 10, padding: '10px 14px', color: 'var(--red)', background: 'var(--red-bg)', fontSize: 13 }}>
+                          {dataError}
+                        </div>
+                      )}
                       <Routes>
-                        <Route path="/"             element={<Dashboard txs={txs} onAdd={() => setShowAdd(true)} />} />
+                        <Route path="/"             element={<Dashboard txs={txs} user={user} onAdd={() => setShowAdd(true)} />} />
                         <Route path="/transactions" element={<Transactions txs={txs} onAdd={() => setShowAdd(true)} onDelete={deleteTx} />} />
                         <Route path="/budget"       element={<Budget txs={txs} budgets={budgets} onAddBudget={addBudget} onDeleteBudget={deleteBudget} />} />
                         <Route path="/savings"      element={<Savings goals={goals} onAddGoal={addGoal} onDeleteGoal={deleteGoal} onUpdateGoal={updateGoal} />} />
+                        <Route path="/planner"      element={<Planner txs={txs} />} />
+                        <Route path="/split"        element={<SplitBills txs={txs} />} />
                         <Route path="/reports"      element={<Reports txs={txs} />} />
                       </Routes>
                     </main>
                   </div>
                   {/* Sheet-based Add Transaction (replaces modal) */}
-                  <AddTxSheet open={showAdd} onClose={() => setShowAdd(false)} onAdd={addTx} />
+                  <AddTxSheet open={showAdd} onClose={() => setShowAdd(false)} onAdd={addTx} error={dataError} />
                 </div>
               ) : (
                 <Navigate to="/login" replace />

@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const DB_PATH = path.join(__dirname, 'data.db')
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db')
 const JWT_SECRET = process.env.JWT_SECRET || 'takaTrackSecretKey'
 
 const app = express()
@@ -48,11 +48,18 @@ const get = (sql, params = []) => new Promise((resolve, reject) => {
 const createTables = async () => {
   await run(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
+    email TEXT UNIQUE,
+    password TEXT,
     name TEXT NOT NULL,
+    phone TEXT,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`)
+
+  const userColumns = await all('PRAGMA table_info(users)')
+  if (!userColumns.some(column => column.name === 'phone')) {
+    await run('ALTER TABLE users ADD COLUMN phone TEXT')
+  }
+  await run('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone) WHERE phone IS NOT NULL')
 
   await run(`CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -151,10 +158,14 @@ const seedDefaultData = async () => {
 
 const initDb = async () => {
   await createTables()
-  await seedDefaultData()
+  if (process.env.SEED_DEMO_DATA === 'true') await seedDefaultData()
 }
 
-const signToken = user => jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' })
+const signToken = user => jwt.sign({ id: user.id, phone: user.phone, name: user.name }, JWT_SECRET, { expiresIn: '7d' })
+const normalizePhone = value => {
+  const raw = String(value || '').trim()
+  return /^[+\d\s().-]+$/.test(raw) ? raw.replace(/\D/g, '') : ''
+}
 
 const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization
@@ -189,26 +200,43 @@ app.post('/api/register', async (req, res) => {
 })
 
 app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Login details are incomplete.' })
+  const name = String(req.body?.name || '').trim()
+  const phone = normalizePhone(req.body?.phone)
+  if (name.length < 2 || name.length > 80 || phone.length < 7 || phone.length > 15) {
+    return res.status(400).json({ error: 'Enter your name and a valid mobile number.' })
   }
 
-  const user = await get('SELECT * FROM users WHERE email = ?', [email])
+  let user = await get('SELECT id, name, phone FROM users WHERE phone = ?', [phone])
+  if (user && user.name.toLocaleLowerCase() !== name.toLocaleLowerCase()) {
+    return res.status(401).json({ error: 'Name and mobile number do not match.' })
+  }
+
   if (!user) {
-    return res.status(401).json({ error: 'Invalid email or password.' })
+    try {
+      const userColumns = await all('PRAGMA table_info(users)')
+      const legacyEmailRequired = userColumns.some(column => column.name === 'email' && column.notnull)
+      const result = legacyEmailRequired
+        ? await run(
+          'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)',
+          [`mobile-${phone}@takakhata.invalid`, '', name, phone],
+        )
+        : await run('INSERT INTO users (name, phone) VALUES (?, ?)', [name, phone])
+      user = { id: result.lastID, name, phone }
+    } catch (err) {
+      if (err.code !== 'SQLITE_CONSTRAINT') throw err
+      user = await get('SELECT id, name, phone FROM users WHERE phone = ?', [phone])
+      if (!user) throw err
+      if (user.name.toLocaleLowerCase() !== name.toLocaleLowerCase()) {
+        return res.status(401).json({ error: 'Name and mobile number do not match.' })
+      }
+    }
   }
 
-  const validPassword = await bcrypt.compare(password, user.password)
-  if (!validPassword) {
-    return res.status(401).json({ error: 'Invalid email or password.' })
-  }
-
-  res.json({ token: signToken(user), user: { id: user.id, email: user.email, name: user.name } })
+  res.json({ token: signToken(user), user })
 })
 
 app.get('/api/me', authenticate, async (req, res) => {
-  const user = await get('SELECT id, email, name FROM users WHERE id = ?', [req.user.id])
+  const user = await get('SELECT id, name, phone FROM users WHERE id = ?', [req.user.id])
   res.json({ user })
 })
 
