@@ -17,4 +17,4 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: CORS_ORIGIN
-        value: https://taka-tracker-navy.vercel.app
+        value: https://taka-tracker-navy.vercel.app,http://localhost:5173,http://127.0.0.1:5173
