@@ -462,16 +462,111 @@ const ThemeToggle = () => {
   )
 }
 
-/* ─── TOPBAR ────────────────────────────────────────────────── */
-const Topbar = ({ user, onAdd, onSavePhone, balance }) => {
-  const { theme, toggleTheme } = useTheme()
-  const [profileOpen, setProfileOpen] = useState(false)
-  const [phone, setPhone] = useState(user.phone)
+const ACCESS_NAME = 'Oywon'
+const ACCESS_PHONE = '01626976910'
 
-  const savePhone = () => {
-    onSavePhone(phone.trim())
-    setProfileOpen(false)
+const AccessGate = ({ onUnlock }) => {
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [error, setError] = useState('')
+  const { theme } = useTheme()
+
+  const submit = event => {
+    event.preventDefault()
+    const matchesName = name.trim().toLocaleLowerCase() === ACCESS_NAME.toLocaleLowerCase()
+    const matchesPhone = phone.replace(/\D/g, '') === ACCESS_PHONE
+    if (!matchesName || !matchesPhone) {
+      setError('Username or phone number does not match.')
+      return
+    }
+    setError('')
+    onUnlock()
   }
+
+  const inputStyle = {
+    background: 'var(--surface2)',
+    border: '1px solid var(--border)',
+    color: 'var(--text)',
+    borderRadius: 10,
+  }
+  const labelStyle = {
+    color: 'var(--text3)',
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    marginBottom: 6,
+    display: 'block',
+  }
+
+  return (
+    <div className="page-shell" data-theme={theme} style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', padding: 24 }}>
+      <div style={{ maxWidth: 460, width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
+          <AppLogo />
+        </div>
+        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
+          <CardHeader style={{ borderBottom: '1px solid var(--border)', paddingBottom: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <CardTitle className="font-display" style={{ fontSize: 24, color: 'var(--text)' }}>Welcome, Oywon</CardTitle>
+                <CardDescription style={{ color: 'var(--text3)', marginTop: 4 }}>
+                  Enter your username and phone number to open your ledger.
+                </CardDescription>
+              </div>
+              <ThemeToggle />
+            </div>
+          </CardHeader>
+          <form onSubmit={submit}>
+            <CardContent style={{ padding: 24 }}>
+              {error && (
+                <div role="alert" style={{ color: 'var(--red)', marginBottom: 16, fontSize: 13, background: 'var(--red-bg)', borderRadius: 10, padding: '10px 14px' }}>
+                  {error}
+                </div>
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <Label htmlFor="access-name" style={labelStyle}>Username</Label>
+                  <Input id="access-name" name="username" autoComplete="username" value={name} onChange={event => setName(event.target.value)} required style={inputStyle} />
+                </div>
+                <div>
+                  <Label htmlFor="access-phone" style={labelStyle}>Phone number</Label>
+                  <Input id="access-phone" name="tel" type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={event => setPhone(event.target.value)} required style={inputStyle} />
+                </div>
+              </div>
+              <p style={{ color: 'var(--text3)', fontSize: 11, lineHeight: 1.5, marginTop: 18 }}>
+                Basic offline check only—not secure identity verification. These details are included in the public app and can be inspected or bypassed.
+              </p>
+            </CardContent>
+            <CardContent style={{ padding: '0 24px 24px' }}>
+              <Button
+                type="submit"
+                disabled={!name.trim() || !phone.trim()}
+                style={{
+                  width: '100%',
+                  background: 'linear-gradient(135deg, #22396F 0%, #0D1C42 100%)',
+                  color: '#FCF1D0',
+                  fontWeight: 700,
+                  borderRadius: 12,
+                  height: 46,
+                  fontSize: 14,
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                Open my ledger
+              </Button>
+            </CardContent>
+          </form>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+/* ─── TOPBAR ────────────────────────────────────────────────── */
+const Topbar = ({ user, onAdd, balance }) => {
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <div className="topbar">
@@ -525,16 +620,6 @@ const Topbar = ({ user, onAdd, onSavePhone, balance }) => {
             </div>
             <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
             <DropdownMenuItem
-              onClick={() => {
-                setPhone(user.phone)
-                setProfileOpen(true)
-              }}
-              style={{ padding: '9px 12px', borderRadius: 8, cursor: 'pointer', color: 'var(--text2)', fontSize: 13 }}
-            >
-              Edit local phone number
-            </DropdownMenuItem>
-            <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
-            <DropdownMenuItem
               onClick={toggleTheme}
               style={{ padding: '9px 12px', borderRadius: 8, cursor: 'pointer', color: 'var(--text2)', fontSize: 13, display: 'flex', gap: 8 }}
             >
@@ -544,28 +629,6 @@ const Topbar = ({ user, onAdd, onSavePhone, balance }) => {
           </DropdownMenuContent>
         </DropdownMenu>
       )}
-      <Sheet open={profileOpen} onOpenChange={setProfileOpen}>
-        <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Local profile</SheetTitle>
-            <SheetDescription>Your phone number is saved only in this browser. It does not lock or verify the app.</SheetDescription>
-          </SheetHeader>
-          <div style={{ padding: 24 }}>
-            <Label htmlFor="offline-profile-phone">Phone number</Label>
-            <Input
-              id="offline-profile-phone"
-              type="tel"
-              autoComplete="tel"
-              value={phone}
-              onChange={event => setPhone(event.target.value)}
-              placeholder="Enter your number on this device"
-            />
-          </div>
-          <SheetFooter>
-            <Button onClick={savePhone}>Save profile</Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
     </div>
   )
 }
@@ -1611,10 +1674,10 @@ const Reports = ({ txs }) => {
 /* ─── APP ───────────────────────────────────────────────────── */
 /* APP */
 const OFFLINE_DATA_KEY = 'takaTrack_offline_data'
-const offlineUser = { id: 'offline-oywon', name: 'Oywon', phone: '' }
+const offlineUser = { id: 'offline-oywon', name: ACCESS_NAME, phone: ACCESS_PHONE }
 
 const readOfflineData = () => {
-  const emptyData = { transactions: [], budgets: [], goals: [], profile: offlineUser }
+  const emptyData = { transactions: [], budgets: [], goals: [] }
   try {
     const saved = localStorage.getItem(OFFLINE_DATA_KEY)
     if (!saved) return { data: emptyData, error: null, canSave: true }
@@ -1626,17 +1689,7 @@ const readOfflineData = () => {
     ) {
       return { data: emptyData, error: 'Saved offline data is invalid. The stored data was left unchanged.', canSave: false }
     }
-    return {
-      data: {
-        ...data,
-        profile: {
-          ...offlineUser,
-          ...(data.profile && typeof data.profile === 'object' ? data.profile : {}),
-        },
-      },
-      error: null,
-      canSave: true,
-    }
+    return { data, error: null, canSave: true }
   } catch (err) {
     return { data: emptyData, error: `Could not read saved offline data: ${err.message}`, canSave: false }
   }
@@ -1658,7 +1711,8 @@ export default function App() {
   const [goals, setGoals] = useState(initialOfflineData.data.goals)
   const [showAdd, setShowAdd] = useState(false)
   const [dataError, setDataError] = useState(initialOfflineData.error)
-  const [user, setUser] = useState(initialOfflineData.data.profile)
+  const [isUnlocked, setIsUnlocked] = useState(false)
+  const user = offlineUser
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark'
@@ -1684,52 +1738,46 @@ export default function App() {
     }
   }
 
-  const savePhone = phone => {
-    const profile = { ...user, phone }
-    setUser(profile)
-    persistOfflineData({ transactions: txs, budgets, goals, profile })
-  }
-
   const addTx = tx => {
     const created = { ...tx, id: createOfflineId() }
     const next = [created, ...txs]
     setTxs(next)
-    persistOfflineData({ transactions: next, budgets, goals, profile: user })
+    persistOfflineData({ transactions: next, budgets, goals })
     return created
   }
 
   const deleteTx = id => {
     const next = txs.filter(transaction => transaction.id !== id)
     setTxs(next)
-    persistOfflineData({ transactions: next, budgets, goals, profile: user })
+    persistOfflineData({ transactions: next, budgets, goals })
   }
 
   const addBudget = budget => {
     const created = { ...budget, id: createOfflineId() }
     const next = [created, ...budgets]
     setBudgets(next)
-    persistOfflineData({ transactions: txs, budgets: next, goals, profile: user })
+    persistOfflineData({ transactions: txs, budgets: next, goals })
     return created
   }
 
   const deleteBudget = id => {
     const next = budgets.filter(budget => budget.id !== id)
     setBudgets(next)
-    persistOfflineData({ transactions: txs, budgets: next, goals, profile: user })
+    persistOfflineData({ transactions: txs, budgets: next, goals })
   }
 
   const addGoal = goal => {
     const created = { ...goal, id: createOfflineId() }
     const next = [created, ...goals]
     setGoals(next)
-    persistOfflineData({ transactions: txs, budgets, goals: next, profile: user })
+    persistOfflineData({ transactions: txs, budgets, goals: next })
     return created
   }
 
   const deleteGoal = id => {
     const next = goals.filter(goal => goal.id !== id)
     setGoals(next)
-    persistOfflineData({ transactions: txs, budgets, goals: next, profile: user })
+    persistOfflineData({ transactions: txs, budgets, goals: next })
   }
 
   const updateGoal = (id, inc) => {
@@ -1739,7 +1787,7 @@ export default function App() {
       : goal
     ))
     setGoals(next)
-    persistOfflineData({ transactions: txs, budgets, goals: next, profile: user })
+    persistOfflineData({ transactions: txs, budgets, goals: next })
   }
 
   const balance = txs.length
@@ -1751,14 +1799,16 @@ export default function App() {
       <div data-theme={theme}>
         <FontLoader theme={theme} />
         <Router>
-          <Routes>
+          {!isUnlocked ? (
+            <AccessGate onUnlock={() => setIsUnlocked(true)} />
+          ) : <Routes>
             <Route
               path="/*"
               element={(
                 <div className="page-shell" style={{ display: 'flex', minHeight: '100vh' }}>
                   <Sidebar balance={balance} />
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    <Topbar user={user} onAdd={() => setShowAdd(true)} onSavePhone={savePhone} balance={balance} />
+                    <Topbar user={user} onAdd={() => setShowAdd(true)} balance={balance} />
                     <main style={{ flex: 1, overflowY: 'auto' }}>
                       {dataError && (
                         <div role="alert" style={{ margin: '16px 28px 0', borderRadius: 10, padding: '10px 14px', color: 'var(--red)', background: 'var(--red-bg)', fontSize: 13 }}>
@@ -1781,7 +1831,7 @@ export default function App() {
                 </div>
               )}
             />
-          </Routes>
+          </Routes>}
         </Router>
       </div>
     </ThemeContext.Provider>

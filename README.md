@@ -55,9 +55,12 @@ online visit; open the app once while online before relying on it offline.
 - Transactions, budgets, savings goals, and theme preferences stay in this
   browser's local storage. They do not sync or transfer to another device.
 - Clearing this site's browser data can permanently delete the ledger.
-- There is no login, phone verification, or access lock. Anyone can open the
-  public website. A phone number entered in the profile is saved only in that
-  browser and is not included in the public build; it does not restrict access.
+- The app asks for username `Oywon` and the configured phone number on each
+  page load. The check is performed in public browser code: it is only a basic
+  offline gate, not secure authentication, phone ownership verification, or
+  protection against someone inspecting or bypassing the frontend.
+- The public site and its code remain accessible to anyone. Do not store
+  sensitive financial data here if you need server-enforced access control.
 - Offline mode works after the app has loaded successfully online at least
   once. Browser storage and service-worker support are required.
 
