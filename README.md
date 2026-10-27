@@ -41,10 +41,13 @@ Create a local environment file from the example:
 cp .env.example .env.local
 ```
 
-The example points the Vite app at the local API:
+For local development, leave `VITE_API_URL` empty so the browser uses Vite's
+same-origin `/api` proxy to reach the backend. Set this variable only when the
+frontend needs to use a separately hosted API. No Firebase configuration is
+required for sign-up or sign-in:
 
 ```env
-VITE_API_URL=http://localhost:4000
+VITE_API_URL=
 ```
 
 Start the frontend and API together:
