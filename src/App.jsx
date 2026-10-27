@@ -18,7 +18,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -58,8 +57,6 @@ const useTheme = () => useContext(ThemeContext)
 /* ─── FONTS & GLOBAL STYLES ────────────────────────────────── */
 const FontLoader = ({ theme }) => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800;9..144,900&family=IBM+Plex+Mono:wght@400;500;600;700&family=Tiro+Bangla:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap');
-
     :root {
       --paper: #FCF1D0;
       --paper-deep: #e9dfbd;
@@ -465,125 +462,16 @@ const ThemeToggle = () => {
   )
 }
 
-/* ─── AUTH PAGE ─────────────────────────────────────────────── */
-const AuthPage = ({ onContinue, error }) => {
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [password, setPassword] = useState('')
-  const [mode, setMode] = useState('login')
-  const [busy, setBusy] = useState(false)
-  const [localError, setLocalError] = useState('')
-  const { theme } = useTheme()
-  const isRegistering = mode === 'register'
-
-  const submit = async event => {
-    event.preventDefault()
-    setLocalError('')
-    setBusy(true)
-    try {
-      await onContinue(mode, {
-        ...(isRegistering ? { name: name.trim() } : {}),
-        phone: phone.trim(),
-        password,
-      })
-    } catch (err) {
-      setLocalError(err.message || 'Unable to sign in.')
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  const changeMode = () => {
-    setMode(current => current === 'login' ? 'register' : 'login')
-    setLocalError('')
-  }
-
-  const inputStyle = { background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }
-  const labelStyle = { color: 'var(--text3)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }
-
-  return (
-    <div className="page-shell" data-theme={theme} style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', padding: 24 }}>
-      <FontLoader theme={theme} />
-      <div style={{ maxWidth: 460, width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 32 }}>
-          <AppLogo />
-        </div>
-
-        <Card style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--shadow-lg)' }}>
-          <CardHeader style={{ borderBottom: '1px solid var(--border)', paddingBottom: 20 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <CardTitle className="font-display" style={{ fontSize: 24, color: 'var(--text)' }}>
-                  {isRegistering ? 'Create your account' : 'Welcome back'}
-                </CardTitle>
-                <CardDescription style={{ color: 'var(--text3)', marginTop: 4 }}>
-                  {isRegistering ? 'Create an account to start your personal ledger.' : 'Sign in with your mobile number and password.'}
-                </CardDescription>
-              </div>
-              <ThemeToggle />
-            </div>
-          </CardHeader>
-
-          <form onSubmit={submit}>
-            <CardContent style={{ padding: 24 }}>
-              {(error || localError) && (
-                <div role="alert" style={{ color: 'var(--red)', marginBottom: 16, fontSize: 13, background: 'var(--red-bg)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <AlertTriangle size={14} /> {localError || error}
-                </div>
-              )}
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {isRegistering && (
-                  <>
-                    <div>
-                      <Label htmlFor="auth-name" style={labelStyle}>Full Name</Label>
-                      <Input id="auth-name" autoComplete="name" placeholder="Ayesha Rahman" value={name} onChange={e => setName(e.target.value)} required minLength={2} maxLength={80} style={inputStyle} />
-                    </div>
-                    <div>
-                      <Label htmlFor="auth-phone" style={labelStyle}>Mobile Number</Label>
-                      <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+880 17XXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} required style={inputStyle} />
-                    </div>
-                  </>
-                )}
-                {!isRegistering && (
-                  <div>
-                    <Label htmlFor="auth-phone" style={labelStyle}>Mobile Number</Label>
-                    <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+880 17XXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} required style={inputStyle} />
-                  </div>
-                )}
-                <div>
-                  <Label htmlFor="auth-password" style={labelStyle}>Password</Label>
-                  <Input id="auth-password" type="password" autoComplete={isRegistering ? 'new-password' : 'current-password'} placeholder={isRegistering ? 'At least 8 characters' : 'Your password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={isRegistering ? 8 : undefined} maxLength={72} style={inputStyle} />
-                </div>
-              </div>
-            </CardContent>
-
-            <CardFooter style={{ padding: '0 24px 24px', flexDirection: 'column', gap: 12, alignItems: 'stretch' }}>
-              <Button
-                type="submit"
-                disabled={busy || !phone.trim() || !password || (isRegistering && !name.trim())}
-                style={{
-                  width: '100%', background: 'linear-gradient(135deg, #22396F 0%, #0D1C42 100%)', color: '#FCF1D0',
-                  fontWeight: 700, borderRadius: 12, height: 46, fontSize: 14,
-                  border: 'none', cursor: busy ? 'not-allowed' : 'pointer', opacity: busy ? 0.7 : 1
-                }}
-              >
-                {busy ? 'Please wait…' : isRegistering ? 'Create account' : 'Sign in'}
-              </Button>
-              <Button type="button" variant="ghost" onClick={changeMode} disabled={busy}>
-                {isRegistering ? 'Already have an account? Sign in' : 'New here? Create an account'}
-              </Button>
-            </CardFooter>
-          </form>
-        </Card>
-      </div>
-    </div>
-  )
-}
-
 /* ─── TOPBAR ────────────────────────────────────────────────── */
-const Topbar = ({ user, onLogout, onAdd, balance }) => {
+const Topbar = ({ user, onAdd, onSavePhone, balance }) => {
   const { theme, toggleTheme } = useTheme()
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [phone, setPhone] = useState(user.phone)
+
+  const savePhone = () => {
+    onSavePhone(phone.trim())
+    setProfileOpen(false)
+  }
 
   return (
     <div className="topbar">
@@ -637,30 +525,54 @@ const Topbar = ({ user, onLogout, onAdd, balance }) => {
             </div>
             <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
             <DropdownMenuItem
+              onClick={() => {
+                setPhone(user.phone)
+                setProfileOpen(true)
+              }}
+              style={{ padding: '9px 12px', borderRadius: 8, cursor: 'pointer', color: 'var(--text2)', fontSize: 13 }}
+            >
+              Edit local phone number
+            </DropdownMenuItem>
+            <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
+            <DropdownMenuItem
               onClick={toggleTheme}
               style={{ padding: '9px 12px', borderRadius: 8, cursor: 'pointer', color: 'var(--text2)', fontSize: 13, display: 'flex', gap: 8 }}
             >
               {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
               {theme === 'dark' ? 'Light mode' : 'Dark mode'}
             </DropdownMenuItem>
-            <DropdownMenuSeparator style={{ background: 'var(--border)', margin: '4px 0' }} />
-            <DropdownMenuItem
-              onClick={onLogout}
-              style={{ padding: '9px 12px', borderRadius: 8, cursor: 'pointer', color: 'var(--red)', fontSize: 13 }}
-            >
-              Sign out
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )}
+      <Sheet open={profileOpen} onOpenChange={setProfileOpen}>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Local profile</SheetTitle>
+            <SheetDescription>Your phone number is saved only in this browser. It does not lock or verify the app.</SheetDescription>
+          </SheetHeader>
+          <div style={{ padding: 24 }}>
+            <Label htmlFor="offline-profile-phone">Phone number</Label>
+            <Input
+              id="offline-profile-phone"
+              type="tel"
+              autoComplete="tel"
+              value={phone}
+              onChange={event => setPhone(event.target.value)}
+              placeholder="Enter your number on this device"
+            />
+          </div>
+          <SheetFooter>
+            <Button onClick={savePhone}>Save profile</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
 
 /* ─── SIDEBAR ───────────────────────────────────────────────── */
-const Sidebar = ({ balance, user, onLogout }) => {
+const Sidebar = ({ balance }) => {
   const loc = useLocation()
-  const { theme } = useTheme()
   const links = [
     { to: '/',             label: 'Dashboard',     icon: <Home size={16} /> },
     { to: '/transactions', label: 'Transactions',  icon: <AlignLeft size={16} /> },
@@ -723,6 +635,7 @@ const Sidebar = ({ balance, user, onLogout }) => {
           {new Date().toLocaleDateString('en-BD', { month: 'long', year: 'numeric' })}
         </div>
         <div style={{ fontSize: 11, color: 'var(--text3)' }}>Dhaka, Bangladesh</div>
+        <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 6 }}>Offline · saved on this device</div>
       </div>
     </aside>
   )
@@ -1696,225 +1609,142 @@ const Reports = ({ txs }) => {
 }
 
 /* ─── APP ───────────────────────────────────────────────────── */
+/* APP */
+const OFFLINE_DATA_KEY = 'takaTrack_offline_data'
+const offlineUser = { id: 'offline-oywon', name: 'Oywon', phone: '' }
+
+const readOfflineData = () => {
+  const emptyData = { transactions: [], budgets: [], goals: [], profile: offlineUser }
+  try {
+    const saved = localStorage.getItem(OFFLINE_DATA_KEY)
+    if (!saved) return { data: emptyData, error: null, canSave: true }
+    const data = JSON.parse(saved)
+    if (
+      !Array.isArray(data.transactions) ||
+      !Array.isArray(data.budgets) ||
+      !Array.isArray(data.goals)
+    ) {
+      return { data: emptyData, error: 'Saved offline data is invalid. The stored data was left unchanged.', canSave: false }
+    }
+    return {
+      data: {
+        ...data,
+        profile: {
+          ...offlineUser,
+          ...(data.profile && typeof data.profile === 'object' ? data.profile : {}),
+        },
+      },
+      error: null,
+      canSave: true,
+    }
+  } catch (err) {
+    return { data: emptyData, error: `Could not read saved offline data: ${err.message}`, canSave: false }
+  }
+}
+
+const createOfflineId = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`
+
 export default function App() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('takaTrack_theme') || 'dark')
-  const [txs, setTxs]       = useState([])
-  const [budgets, setBudgets] = useState([])
-  const [goals, setGoals]   = useState([])
-  const [showAdd, setShowAdd] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [error, setError]   = useState(null)
-  const [dataError, setDataError] = useState(null)
-  const [authError, setAuthError] = useState(null)
-  const [authChecked, setAuthChecked] = useState(false)
-  const [token, setToken]   = useState(() => localStorage.getItem('takaTrack_token') || '')
-  const [user, setUser]     = useState(() => {
-    try { const s = localStorage.getItem('takaTrack_user'); return s ? JSON.parse(s) : null }
-    catch { return null }
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('takaTrack_theme') || 'dark'
+    } catch {
+      return 'dark'
+    }
   })
+  const [initialOfflineData] = useState(readOfflineData)
+  const [txs, setTxs] = useState(initialOfflineData.data.transactions)
+  const [budgets, setBudgets] = useState(initialOfflineData.data.budgets)
+  const [goals, setGoals] = useState(initialOfflineData.data.goals)
+  const [showAdd, setShowAdd] = useState(false)
+  const [dataError, setDataError] = useState(initialOfflineData.error)
+  const [user, setUser] = useState(initialOfflineData.data.profile)
 
   const toggleTheme = () => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark'
+    const next = theme === 'dark' ? 'light' : 'dark'
+    setTheme(next)
+    try {
       localStorage.setItem('takaTrack_theme', next)
-      return next
-    })
+    } catch (err) {
+      setDataError(`Could not save your theme preference: ${err.message}`)
+    }
   }
 
-  // Apply theme to root
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  const syncAuth = (nextToken, nextUser) => {
-    setToken(nextToken); setUser(nextUser)
-    if (nextToken) localStorage.setItem('takaTrack_token', nextToken)
-    else localStorage.removeItem('takaTrack_token')
-    if (nextUser) localStorage.setItem('takaTrack_user', JSON.stringify(nextUser))
-    else localStorage.removeItem('takaTrack_user')
-  }
-
-  const logout = () => { syncAuth('', null); setTxs([]); setBudgets([]); setGoals([]) }
-
-  const apiFetch = async (path, options = {}, customToken = null) => {
-    const authToken = customToken || token
-    const apiBase = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://taka-tracker-api.onrender.com' : '')).replace(/\/+$/, '')
-    const url = apiBase ? `${apiBase}${path}` : path
-    let response
+  const persistOfflineData = data => {
+    if (!initialOfflineData.canSave) return
     try {
-      response = await fetch(url, {
-        headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}), ...(options.headers || {}) },
-        ...options,
-      })
-    } catch (err) {
-      if (err instanceof TypeError) {
-        const target = apiBase || 'this site'
-        throw new Error(`Unable to reach the API at ${target}. Check that the backend is running and VITE_API_URL points to its base URL.`, { cause: err })
-      }
-      throw err
-    }
-    if (!response.ok) {
-      const contentType = response.headers.get('content-type') || ''
-      const body = contentType.includes('application/json') ? await response.json().catch(() => null) : null
-      if (path.startsWith('/api') && !contentType.includes('application/json')) {
-        throw new Error(`The API backend at ${apiBase || 'this site'} is unavailable or returned a non-API response. Deploy the Render API service and confirm its /api/health endpoint is healthy.`)
-      }
-      throw new Error(body?.error || body?.message || response.statusText || 'Server error')
-    }
-    if (response.status === 204) return null
-    return response.json()
-  }
-
-  const handleLogin = async (mode, credentials) => {
-    setAuthError(null)
-    try {
-      const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login'
-      const data = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(credentials) })
-      syncAuth(data.token, data.user)
-      await loadData(data.token, data.user)
-      return true
-    } catch (err) { setAuthError(err.message || 'Login failed'); return false }
-  }
-
-  const verifySession = async () => {
-    if (!token) { setAuthChecked(true); setLoading(false); return }
-    try {
-      setLoading(true); const data = await apiFetch('/api/me')
-      if (data?.user) syncAuth(token, data.user)
-    } catch (err) {
-      if (err.message?.toLowerCase().includes('unauthorized') || err.message?.toLowerCase().includes('invalid token')) {
-        logout(); setAuthError('Session expired. Please sign in again.')
-      } else { setError(err.message || 'Unable to verify session') }
-    } finally { setAuthChecked(true); setLoading(false) }
-  }
-
-  const loadData = async (customToken = null, activeUser = user) => {
-    const authToken = customToken || token
-    if (!activeUser || !authToken) { setLoading(false); return }
-    try {
-      setLoading(true)
-      const [txsData, budgetsData, goalsData] = await Promise.all([
-        apiFetch('/api/transactions', {}, authToken),
-        apiFetch('/api/budgets', {}, authToken),
-        apiFetch('/api/goals', {}, authToken),
-      ])
-      setTxs(txsData); setBudgets(budgetsData); setGoals(goalsData)
-    } catch (err) {
-      if (err.message?.toLowerCase().includes('unauthorized')) { logout(); setAuthError('Session expired.') }
-      else setError(err.message || 'Unable to load data')
-    } finally { setLoading(false) }
-  }
-
-  useEffect(() => { verifySession() }, [token])
-  useEffect(() => { if (!authChecked) return; if (user && token) loadData() }, [authChecked, token, user])
-
-  const addTx = async tx => {
-    try {
-      const created = await apiFetch('/api/transactions', { method: 'POST', body: JSON.stringify(tx) })
-      setDataError(null)
-      setTxs(prev => [created, ...prev])
-      return created
-    } catch (err) {
-      setDataError(`Could not save transaction: ${err.message}`)
-      return null
-    }
-  }
-  const deleteTx = async id => {
-    try {
-      await apiFetch(`/api/transactions/${id}`, { method: 'DELETE' })
+      localStorage.setItem(OFFLINE_DATA_KEY, JSON.stringify(data))
       setDataError(null)
     } catch (err) {
-      setDataError(`Could not delete transaction: ${err.message}`)
-      return
-    }
-    setTxs(prev => prev.filter(t => t.id !== id))
-  }
-  const addBudget = async budget => {
-    try {
-      const created = await apiFetch('/api/budgets', { method: 'POST', body: JSON.stringify(budget) })
-      setDataError(null)
-      setBudgets(prev => [created, ...prev])
-      return created
-    } catch (err) {
-      setDataError(`Could not save budget: ${err.message}`)
-      return null
+      setDataError(`Could not save your offline data in this browser: ${err.message}`)
     }
   }
-  const deleteBudget = async id => {
-    try {
-      await apiFetch(`/api/budgets/${id}`, { method: 'DELETE' })
-      setDataError(null)
-    } catch (err) {
-      setDataError(`Could not delete budget: ${err.message}`)
-      return
-    }
-    setBudgets(prev => prev.filter(b => b.id !== id))
+
+  const savePhone = phone => {
+    const profile = { ...user, phone }
+    setUser(profile)
+    persistOfflineData({ transactions: txs, budgets, goals, profile })
   }
-  const addGoal = async goal => {
-    try {
-      const created = await apiFetch('/api/goals', { method: 'POST', body: JSON.stringify(goal) })
-      setDataError(null)
-      setGoals(prev => [created, ...prev])
-      return created
-    } catch (err) {
-      setDataError(`Could not save goal: ${err.message}`)
-      return null
-    }
+
+  const addTx = tx => {
+    const created = { ...tx, id: createOfflineId() }
+    const next = [created, ...txs]
+    setTxs(next)
+    persistOfflineData({ transactions: next, budgets, goals, profile: user })
+    return created
   }
-  const deleteGoal = async id => {
-    try {
-      await apiFetch(`/api/goals/${id}`, { method: 'DELETE' })
-      setDataError(null)
-    } catch (err) {
-      setDataError(`Could not delete goal: ${err.message}`)
-      return
-    }
-    setGoals(prev => prev.filter(g => g.id !== id))
+
+  const deleteTx = id => {
+    const next = txs.filter(transaction => transaction.id !== id)
+    setTxs(next)
+    persistOfflineData({ transactions: next, budgets, goals, profile: user })
   }
-  const updateGoal = async (id, inc) => {
-    try {
-      const updated = await apiFetch(`/api/goals/${id}`, { method: 'PUT', body: JSON.stringify({ inc }) })
-      setDataError(null)
-      setGoals(prev => prev.map(g => g.id === id ? updated : g))
-      return updated
-    } catch (err) {
-      setDataError(`Could not update goal: ${err.message}`)
-      return null
-    }
+
+  const addBudget = budget => {
+    const created = { ...budget, id: createOfflineId() }
+    const next = [created, ...budgets]
+    setBudgets(next)
+    persistOfflineData({ transactions: txs, budgets: next, goals, profile: user })
+    return created
+  }
+
+  const deleteBudget = id => {
+    const next = budgets.filter(budget => budget.id !== id)
+    setBudgets(next)
+    persistOfflineData({ transactions: txs, budgets: next, goals, profile: user })
+  }
+
+  const addGoal = goal => {
+    const created = { ...goal, id: createOfflineId() }
+    const next = [created, ...goals]
+    setGoals(next)
+    persistOfflineData({ transactions: txs, budgets, goals: next, profile: user })
+    return created
+  }
+
+  const deleteGoal = id => {
+    const next = goals.filter(goal => goal.id !== id)
+    setGoals(next)
+    persistOfflineData({ transactions: txs, budgets, goals: next, profile: user })
+  }
+
+  const updateGoal = (id, inc) => {
+    const next = goals.map(goal => (
+    goal.id === id
+      ? { ...goal, saved: Math.min(goal.target, (Number(goal.saved) || 0) + inc) }
+      : goal
+    ))
+    setGoals(next)
+    persistOfflineData({ transactions: txs, budgets, goals: next, profile: user })
   }
 
   const balance = txs.length
     ? txs.reduce((sum, transaction) => transaction.type === 'income' ? sum + transaction.amount : sum - transaction.amount, 0)
     : null
-
-  if (loading && !authChecked) {
-    return (
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <div data-theme={theme} style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: 'var(--bg)', color: 'var(--text)' }}>
-          <FontLoader theme={theme} />
-          <div style={{ textAlign: 'center' }}>
-            <AppLogo />
-            <div style={{ fontSize: 14, color: 'var(--text2)', marginTop: 16 }}>Verifying your session…</div>
-          </div>
-        </div>
-      </ThemeContext.Provider>
-    )
-  }
-
-  if (error) {
-    return (
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <div data-theme={theme} style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: 'var(--bg)', color: 'var(--red)' }}>
-          <FontLoader theme={theme} />
-          <div style={{ textAlign: 'center', maxWidth: 420 }}>
-            <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Unable to load data</div>
-            <div style={{ color: 'var(--text2)', marginBottom: 16 }}>{error}</div>
-            <button className="btn btn-primary" onClick={loadData}>Retry</button>
-          </div>
-        </div>
-      </ThemeContext.Provider>
-    )
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
@@ -1923,16 +1753,12 @@ export default function App() {
         <Router>
           <Routes>
             <Route
-              path="/login"
-              element={user ? <Navigate to="/" replace /> : <AuthPage onContinue={handleLogin} error={authError} />}
-            />
-            <Route
               path="/*"
-              element={user ? (
+              element={(
                 <div className="page-shell" style={{ display: 'flex', minHeight: '100vh' }}>
-                  <Sidebar balance={balance} user={user} onLogout={logout} />
+                  <Sidebar balance={balance} />
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    <Topbar user={user} onLogout={logout} onAdd={() => setShowAdd(true)} balance={balance} />
+                    <Topbar user={user} onAdd={() => setShowAdd(true)} onSavePhone={savePhone} balance={balance} />
                     <main style={{ flex: 1, overflowY: 'auto' }}>
                       {dataError && (
                         <div role="alert" style={{ margin: '16px 28px 0', borderRadius: 10, padding: '10px 14px', color: 'var(--red)', background: 'var(--red-bg)', fontSize: 13 }}>
@@ -1940,21 +1766,19 @@ export default function App() {
                         </div>
                       )}
                       <Routes>
-                        <Route path="/"             element={<Dashboard txs={txs} user={user} onAdd={() => setShowAdd(true)} />} />
+                        <Route path="/" element={<Dashboard txs={txs} user={user} onAdd={() => setShowAdd(true)} />} />
                         <Route path="/transactions" element={<Transactions txs={txs} onAdd={() => setShowAdd(true)} onDelete={deleteTx} />} />
-                        <Route path="/budget"       element={<Budget txs={txs} budgets={budgets} onAddBudget={addBudget} onDeleteBudget={deleteBudget} />} />
-                        <Route path="/savings"      element={<Savings goals={goals} onAddGoal={addGoal} onDeleteGoal={deleteGoal} onUpdateGoal={updateGoal} />} />
-                        <Route path="/planner"      element={<Planner txs={txs} />} />
-                        <Route path="/split"        element={<SplitBills txs={txs} />} />
-                        <Route path="/reports"      element={<Reports txs={txs} />} />
+                        <Route path="/budget" element={<Budget txs={txs} budgets={budgets} onAddBudget={addBudget} onDeleteBudget={deleteBudget} />} />
+                        <Route path="/savings" element={<Savings goals={goals} onAddGoal={addGoal} onDeleteGoal={deleteGoal} onUpdateGoal={updateGoal} />} />
+                        <Route path="/planner" element={<Planner txs={txs} />} />
+                        <Route path="/split" element={<SplitBills txs={txs} />} />
+                        <Route path="/reports" element={<Reports txs={txs} />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
                       </Routes>
                     </main>
                   </div>
-                  {/* Sheet-based Add Transaction (replaces modal) */}
                   <AddTxSheet open={showAdd} onClose={() => setShowAdd(false)} onAdd={addTx} error={dataError} />
                 </div>
-              ) : (
-                <Navigate to="/login" replace />
               )}
             />
           </Routes>
