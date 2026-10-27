@@ -17,6 +17,7 @@ A personal finance tracker for recording income and expenses, setting budgets, a
 
 - React 19 and Vite
 - Express 5 API
+- Mobile number and password authentication with bcrypt-hashed passwords
 - SQLite database
 - JWT-based API sessions
 
@@ -118,9 +119,11 @@ Keep secrets in your local environment or deployment provider; do not commit the
 
 ## Data and sign-in
 
-Sign in with a name and mobile number. The first use of a mobile number creates a new account and an empty ledger. Transactions, budgets, and savings goals are stored in SQLite and associated with that account.
-
-**Security note:** The current sign-in flow uses a name and mobile number but does not verify ownership of the number. It is intended for development and demonstration, not production use with real financial data. Add a verified one-time code or another authentication factor and review the API security configuration before deploying publicly.
+Create an account with your name, mobile number, and a password of at least
+eight characters. No email or OTP is needed. After registration, you are signed
+in automatically; future sign-ins need only your mobile number and password.
+The API hashes passwords with bcrypt and stores accounts, transactions, budgets,
+and savings goals in SQLite. Keep `JWT_SECRET` private in production.
 
 ## Project structure
 

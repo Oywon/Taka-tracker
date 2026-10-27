@@ -3,13 +3,16 @@ import cors from 'cors'
 import sqlite3 from 'sqlite3'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { Buffer } from 'node:buffer'
 import path from 'path'
+import process from 'node:process'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data.db')
-const JWT_SECRET = process.env.JWT_SECRET || 'takaTrackSecretKey'
+const JWT_SECRET = process.env.JWT_SECRET || (process.env.NODE_ENV === 'production' ? '' : 'takaTrackSecretKey')
+if (!JWT_SECRET) throw new Error('JWT_SECRET must be set in production.')
 
 const app = express()
 const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173')
@@ -101,11 +104,14 @@ const createTables = async () => {
 
 const seedDefaultData = async () => {
   const userCount = await get('SELECT COUNT(*) AS count FROM users')
-  let userId = null
+  let userId
 
   if (userCount?.count === 0) {
     const passwordHash = await bcrypt.hash('Demo@1234', 10)
-    const result = await run('INSERT INTO users (email, password, name) VALUES (?, ?, ?)', ['demo@takatrack.com', passwordHash, 'Demo User'])
+    const result = await run(
+      'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)',
+      ['demo@takatrack.com', passwordHash, 'Demo User', '01700000000'],
+    )
     userId = result.lastID
   } else {
     const existing = await get('SELECT id FROM users LIMIT 1')
@@ -167,7 +173,11 @@ const initDb = async () => {
   if (process.env.SEED_DEMO_DATA === 'true') await seedDefaultData()
 }
 
-const signToken = user => jwt.sign({ id: user.id, phone: user.phone, name: user.name }, JWT_SECRET, { expiresIn: '7d' })
+const signToken = user => jwt.sign(
+  { id: user.id, phone: user.phone, name: user.name },
+  JWT_SECRET,
+  { expiresIn: '7d' },
+)
 const normalizePhone = value => {
   const raw = String(value || '').trim()
   return /^[+\d\s().-]+$/.test(raw) ? raw.replace(/\D/g, '') : ''
@@ -182,8 +192,11 @@ const authenticate = (req, res, next) => {
   const token = authHeader.split(' ')[1]
   try {
     req.user = jwt.verify(token, JWT_SECRET)
+    if (!req.user.id) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
     next()
-  } catch (err) {
+  } catch {
     res.status(401).json({ error: 'Invalid token' })
   }
 }
@@ -192,57 +205,69 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' })
 })
 
-app.post('/api/register', async (req, res) => {
-  const { email, name, password } = req.body
-  if (!email || !name || !password) {
-    return res.status(400).json({ error: 'Registration details are incomplete.' })
+app.post('/api/auth/register', async (req, res) => {
+  const name = String(req.body?.name || '').trim()
+  const phone = normalizePhone(req.body?.phone)
+  const password = String(req.body?.password || '')
+
+  if (name.length < 2 || name.length > 80) {
+    return res.status(400).json({ error: 'Enter a name between 2 and 80 characters.' })
+  }
+  if (phone.length < 7 || phone.length > 15) {
+    return res.status(400).json({ error: 'Enter a valid phone number.' })
+  }
+  if (password.length < 8 || Buffer.byteLength(password, 'utf8') > 72) {
+    return res.status(400).json({ error: 'Your password must be at least 8 characters and no more than 72 bytes.' })
   }
 
-  const existing = await get('SELECT id FROM users WHERE email = ?', [email])
-  if (existing) {
-    return res.status(409).json({ error: 'Email already in use.' })
+  const existingPhone = await get('SELECT id FROM users WHERE phone = ?', [phone])
+  if (existingPhone) {
+    return res.status(409).json({ error: 'An account with this phone number already exists.' })
   }
 
   const passwordHash = await bcrypt.hash(password, 10)
-  const result = await run('INSERT INTO users (email, password, name) VALUES (?, ?, ?)', [email, passwordHash, name])
-  const user = await get('SELECT id, email, name FROM users WHERE id = ?', [result.lastID])
-  res.status(201).json({ token: signToken(user), user })
+  let result
+  try {
+    result = await run(
+      'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)',
+      [`phone-${phone}@takakhata.invalid`, passwordHash, name, phone],
+    )
+  } catch (err) {
+    if (err.code === 'SQLITE_CONSTRAINT') {
+      return res.status(409).json({ error: 'An account with these details already exists.' })
+    }
+    throw err
+  }
+
+  const user = { id: result.lastID, name, phone }
+  res.status(201).json({
+    token: signToken(user),
+    user: { id: user.id, name: user.name, phone: user.phone },
+  })
 })
 
-app.post('/api/login', async (req, res) => {
-  const name = String(req.body?.name || '').trim()
+app.post('/api/auth/login', async (req, res) => {
   const phone = normalizePhone(req.body?.phone)
-  if (name.length < 2 || name.length > 80 || phone.length < 7 || phone.length > 15) {
-    return res.status(400).json({ error: 'Enter your name and a valid mobile number.' })
+  const password = String(req.body?.password || '')
+  if (phone.length < 7 || phone.length > 15 || !password) {
+    return res.status(400).json({ error: 'Enter a valid mobile number and password.' })
+  }
+  if (Buffer.byteLength(password, 'utf8') > 72) {
+    return res.status(400).json({ error: 'Your password must be no more than 72 bytes.' })
   }
 
-  let user = await get('SELECT id, name, phone FROM users WHERE phone = ?', [phone])
-  if (user && user.name.toLocaleLowerCase() !== name.toLocaleLowerCase()) {
-    return res.status(401).json({ error: 'Name and mobile number do not match.' })
+  const user = await get(
+    'SELECT id, name, phone, password FROM users WHERE phone = ?',
+    [phone],
+  )
+  if (!user?.password || !await bcrypt.compare(password, user.password)) {
+    return res.status(401).json({ error: 'Incorrect mobile number or password.' })
   }
 
-  if (!user) {
-    try {
-      const userColumns = await all('PRAGMA table_info(users)')
-      const legacyEmailRequired = userColumns.some(column => column.name === 'email' && column.notnull)
-      const result = legacyEmailRequired
-        ? await run(
-          'INSERT INTO users (email, password, name, phone) VALUES (?, ?, ?, ?)',
-          [`mobile-${phone}@takakhata.invalid`, '', name, phone],
-        )
-        : await run('INSERT INTO users (name, phone) VALUES (?, ?)', [name, phone])
-      user = { id: result.lastID, name, phone }
-    } catch (err) {
-      if (err.code !== 'SQLITE_CONSTRAINT') throw err
-      user = await get('SELECT id, name, phone FROM users WHERE phone = ?', [phone])
-      if (!user) throw err
-      if (user.name.toLocaleLowerCase() !== name.toLocaleLowerCase()) {
-        return res.status(401).json({ error: 'Name and mobile number do not match.' })
-      }
-    }
-  }
-
-  res.json({ token: signToken(user), user })
+  res.json({
+    token: signToken(user),
+    user: { id: user.id, name: user.name, phone: user.phone },
+  })
 })
 
 app.get('/api/me', authenticate, async (req, res) => {

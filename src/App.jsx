@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom'
 import {
   Plus, Trash2, Edit2, TrendingUp, TrendingDown, Wallet,
@@ -469,15 +469,37 @@ const ThemeToggle = () => {
 const AuthPage = ({ onContinue, error }) => {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
+  const [password, setPassword] = useState('')
+  const [mode, setMode] = useState('login')
   const [busy, setBusy] = useState(false)
+  const [localError, setLocalError] = useState('')
   const { theme } = useTheme()
+  const isRegistering = mode === 'register'
 
-  const submit = async () => {
+  const submit = async event => {
+    event.preventDefault()
+    setLocalError('')
     setBusy(true)
     try {
-      await onContinue(name, phone)
-    } finally { setBusy(false) }
+      await onContinue(mode, {
+        ...(isRegistering ? { name: name.trim() } : {}),
+        phone: phone.trim(),
+        password,
+      })
+    } catch (err) {
+      setLocalError(err.message || 'Unable to sign in.')
+    } finally {
+      setBusy(false)
+    }
   }
+
+  const changeMode = () => {
+    setMode(current => current === 'login' ? 'register' : 'login')
+    setLocalError('')
+  }
+
+  const inputStyle = { background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }
+  const labelStyle = { color: 'var(--text3)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }
 
   return (
     <div className="page-shell" data-theme={theme} style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', padding: 24 }}>
@@ -491,60 +513,68 @@ const AuthPage = ({ onContinue, error }) => {
           <CardHeader style={{ borderBottom: '1px solid var(--border)', paddingBottom: 20 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <CardTitle className="font-display" style={{ fontSize: 24, color: 'var(--text)' }}>Welcome to Taka Khata</CardTitle>
+                <CardTitle className="font-display" style={{ fontSize: 24, color: 'var(--text)' }}>
+                  {isRegistering ? 'Create your account' : 'Welcome back'}
+                </CardTitle>
                 <CardDescription style={{ color: 'var(--text3)', marginTop: 4 }}>
-                  Sign in or create your ledger with your name and mobile number.
+                  {isRegistering ? 'Create an account to start your personal ledger.' : 'Sign in with your mobile number and password.'}
                 </CardDescription>
               </div>
               <ThemeToggle />
             </div>
           </CardHeader>
 
-          <CardContent style={{ padding: 24 }}>
-            {error && (
-              <div style={{ color: 'var(--red)', marginBottom: 16, fontSize: 13, background: 'var(--red-bg)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <AlertTriangle size={14} /> {error}
-              </div>
-            )}
+          <form onSubmit={submit}>
+            <CardContent style={{ padding: 24 }}>
+              {(error || localError) && (
+                <div role="alert" style={{ color: 'var(--red)', marginBottom: 16, fontSize: 13, background: 'var(--red-bg)', borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <AlertTriangle size={14} /> {localError || error}
+                </div>
+              )}
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div>
-                <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Full Name</Label>
-                <Input
-                  autoComplete="name"
-                  placeholder="Ayesha Rahman"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }}
-                />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {isRegistering && (
+                  <>
+                    <div>
+                      <Label htmlFor="auth-name" style={labelStyle}>Full Name</Label>
+                      <Input id="auth-name" autoComplete="name" placeholder="Ayesha Rahman" value={name} onChange={e => setName(e.target.value)} required minLength={2} maxLength={80} style={inputStyle} />
+                    </div>
+                    <div>
+                      <Label htmlFor="auth-phone" style={labelStyle}>Mobile Number</Label>
+                      <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+880 17XXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} required style={inputStyle} />
+                    </div>
+                  </>
+                )}
+                {!isRegistering && (
+                  <div>
+                    <Label htmlFor="auth-phone" style={labelStyle}>Mobile Number</Label>
+                    <Input id="auth-phone" type="tel" autoComplete="tel" placeholder="+880 17XXXXXXXX" value={phone} onChange={e => setPhone(e.target.value)} required style={inputStyle} />
+                  </div>
+                )}
+                <div>
+                  <Label htmlFor="auth-password" style={labelStyle}>Password</Label>
+                  <Input id="auth-password" type="password" autoComplete={isRegistering ? 'new-password' : 'current-password'} placeholder={isRegistering ? 'At least 8 characters' : 'Your password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={isRegistering ? 8 : undefined} maxLength={72} style={inputStyle} />
+                </div>
               </div>
-              <div>
-                <Label style={{ color: 'var(--text3)', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6, display: 'block' }}>Phone Number</Label>
-                <Input
-                  type="tel"
-                  autoComplete="tel"
-                  placeholder="+880 17XXXXXXXX"
-                  value={phone}
-                  onChange={e => setPhone(e.target.value)}
-                  style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: 10 }}
-                />
-              </div>
-            </div>
-          </CardContent>
+            </CardContent>
 
-          <CardFooter style={{ padding: '0 24px 24px', flexDirection: 'column', gap: 12, alignItems: 'stretch' }}>
-            <Button
-              onClick={submit}
-              disabled={busy || !name.trim() || !phone.trim()}
-              style={{
-                width: '100%', background: 'linear-gradient(135deg, #22396F 0%, #0D1C42 100%)', color: '#FCF1D0',
-                fontWeight: 700, borderRadius: 12, height: 46, fontSize: 14,
-                border: 'none', cursor: busy ? 'not-allowed' : 'pointer', opacity: busy ? 0.7 : 1
-              }}
-            >
-              {busy ? 'Please wait…' : 'Continue to my ledger'}
-            </Button>
-          </CardFooter>
+            <CardFooter style={{ padding: '0 24px 24px', flexDirection: 'column', gap: 12, alignItems: 'stretch' }}>
+              <Button
+                type="submit"
+                disabled={busy || !phone.trim() || !password || (isRegistering && !name.trim())}
+                style={{
+                  width: '100%', background: 'linear-gradient(135deg, #22396F 0%, #0D1C42 100%)', color: '#FCF1D0',
+                  fontWeight: 700, borderRadius: 12, height: 46, fontSize: 14,
+                  border: 'none', cursor: busy ? 'not-allowed' : 'pointer', opacity: busy ? 0.7 : 1
+                }}
+              >
+                {busy ? 'Please wait…' : isRegistering ? 'Create account' : 'Sign in'}
+              </Button>
+              <Button type="button" variant="ghost" onClick={changeMode} disabled={busy}>
+                {isRegistering ? 'Already have an account? Sign in' : 'New here? Create an account'}
+              </Button>
+            </CardFooter>
+          </form>
         </Card>
       </div>
     </div>
@@ -1710,10 +1740,19 @@ export default function App() {
     const authToken = customToken || token
     const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
     const url = apiBase ? `${apiBase}${path}` : path
-    const response = await fetch(url, {
-      headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}), ...(options.headers || {}) },
-      ...options,
-    })
+    let response
+    try {
+      response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json', ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}), ...(options.headers || {}) },
+        ...options,
+      })
+    } catch (err) {
+      if (err instanceof TypeError) {
+        const target = apiBase || 'this site'
+        throw new Error(`Unable to reach the API at ${target}. Check that the backend is running and VITE_API_URL points to its base URL.`)
+      }
+      throw err
+    }
     if (!response.ok) {
       const body = await response.json().catch(() => null)
       if (response.status === 404 && path.startsWith('/api') && !apiBase) {
@@ -1725,11 +1764,14 @@ export default function App() {
     return response.json()
   }
 
-  const handleLogin = async (name, phone) => {
+  const handleLogin = async (mode, credentials) => {
     setAuthError(null)
     try {
-      const data = await apiFetch('/api/login', { method: 'POST', body: JSON.stringify({ name, phone }) })
-      syncAuth(data.token, data.user); await loadData(data.token); return true
+      const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login'
+      const data = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(credentials) })
+      syncAuth(data.token, data.user)
+      await loadData(data.token, data.user)
+      return true
     } catch (err) { setAuthError(err.message || 'Login failed'); return false }
   }
 
@@ -1745,9 +1787,9 @@ export default function App() {
     } finally { setAuthChecked(true); setLoading(false) }
   }
 
-  const loadData = async (customToken = null) => {
+  const loadData = async (customToken = null, activeUser = user) => {
     const authToken = customToken || token
-    if (!user || !authToken) { setLoading(false); return }
+    if (!activeUser || !authToken) { setLoading(false); return }
     try {
       setLoading(true)
       const [txsData, budgetsData, goalsData] = await Promise.all([
