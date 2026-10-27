@@ -1738,7 +1738,7 @@ export default function App() {
 
   const apiFetch = async (path, options = {}, customToken = null) => {
     const authToken = customToken || token
-    const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '')
+    const apiBase = (import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://taka-tracker-api.onrender.com' : '')).replace(/\/+$/, '')
     const url = apiBase ? `${apiBase}${path}` : path
     let response
     try {
@@ -1749,14 +1749,15 @@ export default function App() {
     } catch (err) {
       if (err instanceof TypeError) {
         const target = apiBase || 'this site'
-        throw new Error(`Unable to reach the API at ${target}. Check that the backend is running and VITE_API_URL points to its base URL.`)
+        throw new Error(`Unable to reach the API at ${target}. Check that the backend is running and VITE_API_URL points to its base URL.`, { cause: err })
       }
       throw err
     }
     if (!response.ok) {
-      const body = await response.json().catch(() => null)
-      if (response.status === 404 && path.startsWith('/api') && !apiBase) {
-        throw new Error('The API is not deployed on this site. Set VITE_API_URL in Vercel to your backend URL, then redeploy.')
+      const contentType = response.headers.get('content-type') || ''
+      const body = contentType.includes('application/json') ? await response.json().catch(() => null) : null
+      if (path.startsWith('/api') && !contentType.includes('application/json')) {
+        throw new Error(`The API backend at ${apiBase || 'this site'} is unavailable or returned a non-API response. Deploy the Render API service and confirm its /api/health endpoint is healthy.`)
       }
       throw new Error(body?.error || body?.message || response.statusText || 'Server error')
     }

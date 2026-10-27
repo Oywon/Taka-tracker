@@ -85,10 +85,14 @@ service restarts and deployments.
 
 ### Connect the Vercel frontend
 
-1. In the Vercel project, open **Settings → Environment Variables**.
-2. Add `VITE_API_URL` with the Render API's base URL, for example
-   `https://taka-tracker-api.onrender.com` (do not add `/api` at the end).
-3. Apply it to the Production environment and redeploy the frontend.
+The production frontend defaults to `https://taka-tracker-api.onrender.com`,
+the service URL configured by `render.yaml`. No Vercel environment variable
+is needed when using that service URL. Deploy the Render Blueprint first and
+confirm that its `/api/health` endpoint returns `{"status":"ok"}`.
+
+If Render assigns a different service URL, open **Settings → Environment
+Variables** in Vercel, set `VITE_API_URL` to the API's base URL (without
+`/api`), apply it to Production, and redeploy the frontend.
 
 The Render Blueprint allows requests from the current Vercel site and local
 development. If the frontend domain changes, update `CORS_ORIGIN` on Render
